@@ -13,7 +13,6 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var moodLevel: Double = 0.5
     var moodOptions: [String] = ["Very Unhappy", "Unhappy", "Neutral", "Happy", "Very Happy"]
-    var accentColor: Color { colorScheme == .dark ? .white : .black }
     
     private var emoji: String {
             switch moodLevel {
@@ -34,7 +33,7 @@ struct ContentView: View {
     
     var body: some View {
             ZStack {
-                Color(.systemGray6)
+                Color(Color.background)
                     .edgesIgnoringSafeArea(.all)
 
                 VStack(spacing: 24) {
@@ -51,10 +50,11 @@ struct ContentView: View {
                 Text("How do you feel about your well-being today?")
                     .font(.title.bold()) // Semi-bold title
                     .multilineTextAlignment(.center)
+                    .foregroundStyle(Color.primaryText)
 
                 Text("Slide the bar to a level closest to how you are feeling right now.")
                     .font(.subheadline)
-                    .foregroundColor(.gray) // Lighter text
+                    .foregroundStyle(Color.secondaryText) // Lighter text
                     .multilineTextAlignment(.center)
             }
         }
@@ -64,28 +64,25 @@ struct ContentView: View {
                 Text(moodText)
                     .font(.title2)
                     .fontWeight(.medium)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .foregroundColor(Color.primaryText)
 
                 Image(emoji)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 200)
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .foregroundColor(Color.primaryText)
                     
                 
                 Slider(value: $moodLevel, in: 0...1)
-                    .tint(accentColor)
+                    .tint(Color.primaryText)
                     
             }
             .padding(.horizontal, 32)
             .padding(.vertical, 24)
-            .background(colorScheme == .dark ? Color.black : Color.white)
+            .background(Color.cardBackground)
             .cornerRadius(28)
-            .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 2)
-            .overlay(
-                    RoundedRectangle(cornerRadius: 28)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
+            .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.secondaryText, lineWidth: colorScheme == .dark ? 0 : 1))
+            
         }
 
         func nextButton() -> some View {
@@ -97,7 +94,7 @@ struct ContentView: View {
                     .foregroundColor(colorScheme == .dark ? .black : .white)
                     .padding()
                     .padding(.horizontal, 16)
-                    .background(accentColor)
+                    .background(Color.primaryButton)
                     .cornerRadius(25)
             }
             .padding(.horizontal, 40)
