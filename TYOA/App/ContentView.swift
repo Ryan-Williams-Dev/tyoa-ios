@@ -32,17 +32,20 @@ struct ContentView: View {
         }
     
     var body: some View {
-            ZStack {
-                Color(Color.background)
-                    .edgesIgnoringSafeArea(.all)
+            NavigationView {
+                ZStack {
+                    Color(Color.background)
+                        .edgesIgnoringSafeArea(.all)
 
-                VStack(spacing: 24) {
-                    headerText()
-                    moodCard()
-                    nextButton()
+                    VStack(spacing: 24) {
+                        headerText()
+                        moodCard()
+                        nextButton()
+                    }
+                    .padding(.horizontal, 24)
                 }
-                .padding(.horizontal, 24)
             }
+            
         }
 
         func headerText() -> some View {
@@ -60,7 +63,7 @@ struct ContentView: View {
         }
 
         func moodCard() -> some View {
-            VStack(spacing: 16) {
+            VStack(alignment: .center, spacing: 16) {
                 Text(moodText)
                     .font(.title2)
                     .fontWeight(.medium)
@@ -85,20 +88,19 @@ struct ContentView: View {
             
         }
 
-        func nextButton() -> some View {
-            Button(action: {
-                print("Next tapped")
-            }) {
-                Text("Next")
-                    .font(.headline)
-                    .foregroundColor(colorScheme == .dark ? .black : .white)
-                    .padding()
-                    .padding(.horizontal, 16)
-                    .background(Color.primaryButton)
-                    .cornerRadius(25)
-            }
-            .padding(.horizontal, 40)
+    func nextButton() -> some View {
+        NavigationLink(destination: HomeView()) {
+            Text("Next")
+                .font(.headline)
+                .foregroundColor(Color.primaryButtonText)
+                .padding()
+                .padding(.horizontal, 16)
+                .background(Color.primaryButton)
+                .cornerRadius(25)
         }
+        .padding(.horizontal, 40)
+    }
+
     
         private var moodText: String {
             switch moodLevel {
