@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-public struct MoodSelevtorView: View {
+struct MoodSelevtorView: View {
     @State var moodLevel: Double = 0.5
     
     var backgroundColor: Color {
@@ -22,7 +22,7 @@ public struct MoodSelevtorView: View {
         }
 
     
-    public var body: some View {
+    var body: some View {
         VStack {
             Text("How would you rate your mood today?")
                 .font(.title)
