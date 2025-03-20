@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct TYOAApp: App {
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,7 +27,7 @@ struct TYOAApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
         .modelContainer(sharedModelContainer)
     }
