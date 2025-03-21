@@ -9,7 +9,12 @@ import SwiftUI
 
 struct SignUpView: View {
     var body: some View {
-        Text("Sign Up")
+        VStack {
+            Text("Sign Up")
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.background)
     }
 }
 

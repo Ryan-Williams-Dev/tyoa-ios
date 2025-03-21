@@ -13,7 +13,7 @@ struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
-  var body: some View {
+    var body: some View {
         VStack {
             VStack(spacing: 8){
                 Text("How would you rate your mood today?")
@@ -23,7 +23,8 @@ struct HomeView: View {
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.secondaryText)
-            }.padding()
+            }
+            .padding()
             
             
             VStack  {
@@ -57,7 +58,7 @@ struct HomeView: View {
             .padding(.horizontal, 40)
             
             Button(action: {
-                isLoggedIn = false // Simulates logging out
+                isLoggedIn = false
             }) {
                 Image(systemName: "chevron.left")
                     .resizable()

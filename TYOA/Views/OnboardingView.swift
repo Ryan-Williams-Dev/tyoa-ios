@@ -58,6 +58,7 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
+        .tint(Color.primary)
         
     }
 }
