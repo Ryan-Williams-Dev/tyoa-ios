@@ -9,26 +9,57 @@ import SwiftUI
 
 struct OnboardingView: View {
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-
+    
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Welcome to TYOA")
-                .font(.largeTitle.bold())
-
-            Text("Track your mood and improve your well-being.")
-                .font(.subheadline)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 30)
-
-            Button("Get Started") {
-                isLoggedIn = true  // Marks user as logged in
+        ZStack {
+            Color.background
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                Spacer()
+                
+                Image("smile")
+                    .resizable()
+                    .frame(width: 200, height: 200)
+                
+                Spacer().frame(height: 40)
+          
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Echo.")
+                        .font(.largeTitle.bold())
+                    
+                    Text("Advice from your best self, delivered when you need it most.")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color.secondaryText)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+               
+                
+                Spacer()
+                Spacer()
+                Spacer()
             }
-            .font(.headline)
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .padding(32)
+            
+            VStack {
+                Spacer()
+                Button("Get Started") {
+                    isLoggedIn = true
+                }
+                .font(.title2)
+                .fontWeight(.semibold)
+                .padding()
+                .background(Color.primaryButton)
+                .foregroundColor(Color.primaryButtonText)
+                .cornerRadius(28)
+                .padding(.bottom, 56)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
-        .padding()
     }
+}
+
+#Preview {
+    OnboardingView()
 }

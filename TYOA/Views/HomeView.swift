@@ -13,21 +13,21 @@ public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
-    var backgroundColor: Color {
-        let opacity = abs(moodLevel - 0.5) * 2
-        
-        return colorScheme == .dark
-        ? Color(
-            red: 0.10 + (0.15 - 0.10) * moodLevel,
-            green: 0.12 + (0.18 - 0.12) * moodLevel,
-            blue: 0.14 + (0.12 - 0.14) * moodLevel
-        ).opacity(opacity)
-        : Color(
-            red: 0.80 + (0.83 - 0.80) * moodLevel,
-            green: 0.82 + (0.85 - 0.82) * moodLevel,
-            blue: 0.84 + (0.80 - 0.84) * moodLevel
-        ).opacity(opacity)
-    }
+//    var backgroundColor: Color {
+//        let opacity = abs(moodLevel - 0.5) * 2
+//        
+//        return colorScheme == .dark
+//        ? Color(
+//            red: 0.10 + (0.15 - 0.10) * moodLevel,
+//            green: 0.12 + (0.18 - 0.12) * moodLevel,
+//            blue: 0.14 + (0.12 - 0.14) * moodLevel
+//        ).opacity(opacity)
+//        : Color(
+//            red: 0.80 + (0.83 - 0.80) * moodLevel,
+//            green: 0.82 + (0.85 - 0.82) * moodLevel,
+//            blue: 0.84 + (0.80 - 0.84) * moodLevel
+//        ).opacity(opacity)
+//    }
     
     
     public var body: some View {
@@ -85,7 +85,7 @@ public struct HomeView: View {
             .buttonStyle(.plain)
         }
         .padding()
-        .background(backgroundColor)
+        .background(Color.background)
     }
     
     private var moodText: String {
