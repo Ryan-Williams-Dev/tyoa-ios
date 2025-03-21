@@ -11,52 +11,54 @@ struct OnboardingView: View {
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
     var body: some View {
-        ZStack {
-            Color.background
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                Spacer()
+        NavigationStack {
+            ZStack {
+                Color.background
+                    .edgesIgnoringSafeArea(.all)
                 
-                Image("smile")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                
-                Spacer().frame(height: 40)
-          
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Echo.")
-                        .font(.largeTitle.bold())
+                VStack {
+                    Spacer()
                     
-                    Text("Advice from your best self, delivered when you need it most.")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.secondaryText)
+                    Image("smile")
+                        .resizable()
+                        .frame(width: 200, height: 200)
+                    
+                    Spacer().frame(height: 40)
+              
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Echo.")
+                            .font(.largeTitle.bold())
+                        
+                        Text("Advice from your best self, delivered when you need it most.")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.secondaryText)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                   
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-               
+                .padding(32)
                 
-                Spacer()
-                Spacer()
-                Spacer()
-            }
-            .padding(32)
-            
-            VStack {
-                Spacer()
-                Button("Get Started") {
-                    isLoggedIn = true
+                VStack {
+                    NavigationLink(destination: SignUpView()) {
+                        Text("Get Started")
+                    }
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .padding()
+                    .background(Color.primaryButton)
+                    .foregroundColor(Color.primaryButtonText)
+                    .cornerRadius(28)
+                    .padding(.bottom, 56)
                 }
-                .font(.title2)
-                .fontWeight(.semibold)
-                .padding()
-                .background(Color.primaryButton)
-                .foregroundColor(Color.primaryButtonText)
-                .cornerRadius(28)
-                .padding(.bottom, 56)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
+        
     }
 }
 
