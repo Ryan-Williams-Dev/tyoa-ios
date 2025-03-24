@@ -13,9 +13,7 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.background
-                    .edgesIgnoringSafeArea(.all)
-                
+
                 VStack {
                     Spacer()
                     
@@ -52,11 +50,12 @@ struct OnboardingView: View {
                     .padding()
                     .background(Color.primaryButton)
                     .foregroundColor(Color.primaryButtonText)
-                    .cornerRadius(28)
+                    .cornerRadius(12)
                     .padding(.bottom, 56)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
+            }.background(Color.background)
+                .tint(Color.primary)
         }
         .tint(Color.primary)
         
