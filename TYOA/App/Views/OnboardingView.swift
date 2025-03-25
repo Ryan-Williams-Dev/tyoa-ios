@@ -17,7 +17,7 @@ struct OnboardingView: View {
                 VStack {
                     Spacer()
                     
-                    Image("smile")
+                    Image("logo")
                         .resizable()
                         .frame(width: 200, height: 200)
                     

@@ -9,21 +9,10 @@ import SwiftUI
 
 struct SignUpView: View {
     @State private var email: String = ""
-    
 
     var body: some View {
         VStack {
-            VStack {
-                Image("smile")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                Text("Log in or sign up")
-                    .font(.title)
-                    .fontWeight(.bold)
-            }
-            .frame(maxWidth: .infinity)
-            
-
+            SignUpHeaderView()
             SignUpFormView(email: $email)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -32,67 +21,104 @@ struct SignUpView: View {
     }
 }
 
+// MARK: - Header
+struct SignUpHeaderView: View {
+    var body: some View {
+        VStack(spacing: 32) {
+            Image("logo")
+                .resizable()
+                .frame(width: 200, height: 200)
+            Text("Log in or sign up")
+                .font(.title)
+                .fontWeight(.bold)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Form
 struct SignUpFormView: View {
     @Binding var email: String
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-    
-    var nextStep: () -> Void = {}
 
     var body: some View {
-        VStack (spacing: 16) {
+        VStack(spacing: 16) {
             FormInputView(text: $email, placeholder: "Email Address")
-            
-            Button(action: nextStep) {
-                Spacer()
-                Text("Next")
-                    .font(.headline)
-                    .foregroundColor(.primaryButtonText)
-                Spacer()
-            }
-            .padding()
-            .background(Color.primaryButton)
-            .cornerRadius(12)
-            .frame(maxWidth: .infinity)
-            
+            PrimaryButton(title: "Next", action: { isLoggedIn = true })
+            Separator()
+            SocialSignInButton(image: "apple.logo", title: "Sign in with Apple", action: { isLoggedIn = true })
+            SocialSignInButton(image: "googleLogo", title: "Sign in with Google", isSFImage: false, action: { isLoggedIn = true })
+        }
+        .padding()
+    }
+}
+
+// MARK: - Components
+
+struct PrimaryButton: View {
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.primaryButtonText)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.primaryButton)
+                .cornerRadius(12)
+        }
+    }
+}
+
+struct Separator: View {
+    var body: some View {
+        HStack {
+            Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.trailing, 8)
+            Text("or").foregroundColor(.secondary)
+            Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.leading, 8)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+struct SocialSignInButton: View {
+    let image: String
+    let title: String
+    var isSFImage: Bool = true
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
             HStack {
-                Spacer()
-                    .overlay(Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.trailing, 16))
-                Text("or")
-                    .foregroundColor(.secondary)
-                Spacer()
-                    .overlay(Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.leading, 16))
-            }
-            .frame(maxWidth: .infinity)
-            
-            Button(action: {
-                isLoggedIn = true;
-            }) {
-                Spacer()
-                Image(systemName: "apple.logo")
-                    .foregroundColor(.primaryText)
-                Text("Sign in with Apple")
+                if isSFImage {
+                    Image(systemName: image)
+                        .foregroundColor(.primaryText)
+                } else {
+                    Image(image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                }
+                Text(title)
                     .font(.headline)
                     .foregroundColor(.primaryText)
-                Spacer()
             }
+            .frame(maxWidth: .infinity)
             .padding()
             .background(Color.cardBackground)
             .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(Color.primaryButton.opacity(0.2), lineWidth: 1)
-                )
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(Color.primaryButton.opacity(0.2), lineWidth: 1)
+            )
             .cornerRadius(12)
-            .frame(maxWidth: .infinity)
-            
+            .tint(Color.primary)
         }
     }
-                
 }
 
-
-
-
-
+// MARK: - Preview
 #Preview {
     SignUpView()
 }
