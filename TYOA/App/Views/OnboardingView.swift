@@ -33,7 +33,6 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
-                Spacer()
 
                 PrimaryNavButton(text: "Get Started", destination: SignUpView())
                 

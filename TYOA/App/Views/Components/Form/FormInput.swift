@@ -16,30 +16,42 @@ struct FormInput: View {
     
     var body: some View {
         VStack {
-            TextField(placeholder, text: $text)
-                .padding()
-                .background(isFieldFocused ? Color.cardBackground : Color.clear)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
-                )
-                .focused($isFieldFocused)
+            if isSecureTextEntry {
+                SecureField(placeholder, text: $text)
+                    .padding()
+                    .background(isFieldFocused ? Color.cardBackground : Color.clear)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
+                    )
+                    .focused($isFieldFocused)
+            } else {
+                TextField(placeholder, text: $text)
+                    .padding()
+                    .background(isFieldFocused ? Color.cardBackground : Color.clear)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
+                    )
+                    .focused($isFieldFocused)
+            }
         }
     }
 }
-
-struct FormInput_Previews: PreviewProvider {
-    struct PreviewWrapper: View {
-        @State private var text = ""
-        @FocusState private var isFieldFocused: Bool
-
-        var body: some View {
-            FormInput(text: $text, isFieldFocused: $isFieldFocused, placeholder: "Email Address")
+    
+    struct FormInput_Previews: PreviewProvider {
+        struct PreviewWrapper: View {
+            @State private var text = ""
+            @FocusState private var isFieldFocused: Bool
+            
+            var body: some View {
+                FormInput(text: $text, isFieldFocused: $isFieldFocused, placeholder: "Email Address", isSecureTextEntry: true)
+            }
+        }
+        
+        static var previews: some View {
+            PreviewWrapper()
         }
     }
-
-    static var previews: some View {
-        PreviewWrapper()
-    }
-}
