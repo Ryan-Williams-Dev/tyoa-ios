@@ -12,50 +12,37 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            VStack {
+                Spacer()
 
-                VStack {
-                    Spacer()
-                    
-                    Image("logo")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                    
-                    Spacer().frame(height: 40)
-              
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Echo.")
-                            .font(.largeTitle.bold())
-                        
-                        Text("Advice from your best self, delivered when you need it most.")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.secondaryText)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                   
-                    
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                }
-                .padding(32)
+                Image("logo")
+                    .resizable()
+                    .frame(width: 200, height: 200)
+
+                Spacer().frame(height: 40)
                 
-                VStack {
-                    NavigationLink(destination: SignUpView()) {
-                        Text("Get Started")
-                    }
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding()
-                    .background(Color.primaryButton)
-                    .foregroundColor(Color.primaryButtonText)
-                    .cornerRadius(12)
-                    .padding(.bottom, 56)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Echo.")
+                        .font(.largeTitle.bold())
+                    
+                    Text("Advice from your best self, delivered when you need it most.")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color.secondaryText)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }.background(Color.background)
-                .tint(Color.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                Spacer()
+
+                PrimaryNavButton(text: "Get Started", destination: SignUpView())
+                
+                Spacer()
+                
+            }
+            .padding(32)
+            .background(Color.background)
+            .tint(Color.primary)
         }
         .tint(Color.primary)
         

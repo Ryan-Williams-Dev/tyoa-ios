@@ -20,7 +20,7 @@ struct HomeView: View {
                     .font(.title)
                     .multilineTextAlignment(.center)
                 Text("Slide the bar to a level that feels right for you")
-                    .font(.subheadline)
+                    .font(.title3)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.secondaryText)
             }
