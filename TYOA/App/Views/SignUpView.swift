@@ -9,16 +9,25 @@ import SwiftUI
 
 struct SignUpView: View {
     @State private var email: String = ""
+    @FocusState private var isEmailFocused: Bool
 
     var body: some View {
         VStack {
             SignUpHeaderView()
-            SignUpFormView(email: $email)
+            SignUpFormView(email: $email, isEmailFocused: $isEmailFocused)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
         .background(Color.background)
+        .onTapGesture {
+            dismissKeyboard()
+        }
     }
+    
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
 }
 
 // MARK: - Header
@@ -39,13 +48,14 @@ struct SignUpHeaderView: View {
 // MARK: - Form
 struct SignUpFormView: View {
     @Binding var email: String
+    @FocusState.Binding var isEmailFocused: Bool
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
 
     var body: some View {
         VStack(spacing: 16) {
-            FormInputView(text: $email, placeholder: "Email Address")
-            PrimaryButton(title: "Next", action: { isLoggedIn = true })
-            Separator()
+            FormInput(text: $email, isFieldFocused: $isEmailFocused, placeholder: "Email Address")
+            FormPrimaryButton(title: "Next", action: { isLoggedIn = true })
+            FormSeparator(text: "or")
             SocialSignInButton(image: "apple.logo", title: "Sign in with Apple", action: { isLoggedIn = true })
             SocialSignInButton(image: "googleLogo", title: "Sign in with Google", isSFImage: false, action: { isLoggedIn = true })
         }
@@ -54,35 +64,6 @@ struct SignUpFormView: View {
 }
 
 // MARK: - Components
-
-struct PrimaryButton: View {
-    let title: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.primaryButtonText)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.primaryButton)
-                .cornerRadius(12)
-        }
-    }
-}
-
-struct Separator: View {
-    var body: some View {
-        HStack {
-            Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.trailing, 8)
-            Text("or").foregroundColor(.secondary)
-            Rectangle().frame(height: 1).foregroundColor(.secondary).padding(.leading, 8)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
 struct SocialSignInButton: View {
     let image: String
     let title: String

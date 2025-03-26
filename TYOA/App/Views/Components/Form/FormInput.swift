@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct FormInputView: View {
+struct FormInput: View {
     @Binding var text: String
-    @FocusState private var isFieldFocused: Bool
+    @FocusState.Binding var isFieldFocused: Bool
     
     let placeholder: String
     var isSecureTextEntry: Bool = false
@@ -29,8 +29,17 @@ struct FormInputView: View {
     }
 }
 
-struct FormInputView_Previews: PreviewProvider {
+struct FormInput_Previews: PreviewProvider {
+    struct PreviewWrapper: View {
+        @State private var text = ""
+        @FocusState private var isFieldFocused: Bool
+
+        var body: some View {
+            FormInput(text: $text, isFieldFocused: $isFieldFocused, placeholder: "Email Address")
+        }
+    }
+
     static var previews: some View {
-        FormInputView(text: .constant(""), placeholder: "Email Address")
+        PreviewWrapper()
     }
 }

@@ -28,7 +28,7 @@ struct HomeView: View {
             
             
             VStack  {
-                Image("smile")
+                Image("logo")
                     .resizable()
                     .scaledToFit()
                 Text(moodText)
