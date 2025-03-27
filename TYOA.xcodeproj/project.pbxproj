@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4ED3EAEE2D95C41A004863E6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED3EAED2D95C41A004863E6 /* FirebaseAnalytics */; };
+		4ED3EAF02D95C41A004863E6 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED3EAEF2D95C41A004863E6 /* FirebaseAuth */; };
+		4ED3EAF22D95C41A004863E6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4ED3EAF12D95C41A004863E6 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4EA2C74A2D7FED18004D32AF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -37,6 +43,20 @@
 			);
 			target = 4EA2C7362D7FED17004D32AF /* TYOA */;
 		};
+		4ED3EAF72D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOATests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = 4EA2C7482D7FED18004D32AF /* TYOATests */;
+		};
+		4ED3EAF82D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOAUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = 4EA2C7522D7FED18004D32AF /* TYOAUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +64,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				4E7FFA562D85E725006A10C0 /* Exceptions for "TYOA" folder in "TYOA" target */,
+				4ED3EAF72D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOATests" target */,
+				4ED3EAF82D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOAUITests" target */,
 			);
 			path = TYOA;
 			sourceTree = "<group>";
@@ -65,6 +87,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4ED3EAEE2D95C41A004863E6 /* FirebaseAnalytics in Frameworks */,
+				4ED3EAF02D95C41A004863E6 /* FirebaseAuth in Frameworks */,
+				4ED3EAF22D95C41A004863E6 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +150,9 @@
 			);
 			name = TYOA;
 			packageProductDependencies = (
+				4ED3EAED2D95C41A004863E6 /* FirebaseAnalytics */,
+				4ED3EAEF2D95C41A004863E6 /* FirebaseAuth */,
+				4ED3EAF12D95C41A004863E6 /* FirebaseFirestore */,
 			);
 			productName = TYOA;
 			productReference = 4EA2C7372D7FED17004D32AF /* TYOA.app */;
@@ -208,6 +236,9 @@
 			);
 			mainGroup = 4EA2C72E2D7FED17004D32AF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4ED3EAEC2D95C41A004863E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4EA2C7382D7FED17004D32AF /* Products */;
 			projectDirPath = "";
@@ -339,6 +370,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -395,6 +427,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -571,6 +604,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4ED3EAEC2D95C41A004863E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4ED3EAED2D95C41A004863E6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4ED3EAEC2D95C41A004863E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		4ED3EAEF2D95C41A004863E6 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4ED3EAEC2D95C41A004863E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		4ED3EAF12D95C41A004863E6 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4ED3EAEC2D95C41A004863E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4EA2C72F2D7FED17004D32AF /* Project object */;
 }

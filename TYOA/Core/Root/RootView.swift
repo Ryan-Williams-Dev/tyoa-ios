@@ -8,14 +8,26 @@
 import SwiftUI
 
 struct RootView: View {
+    @State var splashScreenShown: Bool = true
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-
+    
     var body: some View {
-        if isLoggedIn {
-            HomeView() // Main screen for logged-in users
+        if splashScreenShown {
+            SplashView().onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    withAnimation{
+                        splashScreenShown = false
+                    }
+                }
+            }
         } else {
-            OnboardingView()
+            if isLoggedIn {
+                HomeView() 
+            } else {
+                OnboardingView()
+            }
         }
+        
     }
 }
 

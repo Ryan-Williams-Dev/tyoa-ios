@@ -1,5 +1,5 @@
 //
-//  SignUpView.swift
+//  EmailEntryView.swift
 //  TYOA
 //
 //  Created by Ryan Williams on 2025-03-21.
@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-struct SignUpView: View {
+struct EmailEntryView: View {
     @State private var email: String = ""
-    @State private var password: String = ""
     @FocusState private var isEmailFocused: Bool
-    @FocusState private var isPasswordFocused: Bool
-
+    
     var body: some View {
+        
         VStack {
             SignUpHeaderView()
-            SignUpFormView(email: $email, password: $password, isEmailFocused: $isEmailFocused, isPasswordFocused: $isPasswordFocused)
+            SignUpFormView(email: $email, isEmailFocused: $isEmailFocused)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal)
@@ -24,22 +23,23 @@ struct SignUpView: View {
         .onTapGesture {
             dismissKeyboard()
         }
+        
     }
     
     private func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-
+    
 }
 
 // MARK: - Header
 struct SignUpHeaderView: View {
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 16) {
             Image("logo")
                 .resizable()
                 .frame(width: 200, height: 200)
-            Text("Log in")
+            Text("Log in or sign up")
                 .font(.title)
                 .fontWeight(.bold)
         }
@@ -50,21 +50,16 @@ struct SignUpHeaderView: View {
 // MARK: - Form
 struct SignUpFormView: View {
     @Binding var email: String
-    @Binding var password: String
     @FocusState.Binding var isEmailFocused: Bool
-    @FocusState.Binding var isPasswordFocused: Bool
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-
+    
     var body: some View {
         VStack(spacing: 16) {
             FormInput(text: $email, isFieldFocused: $isEmailFocused, placeholder: "Email Address")
-            FormInput(text: $password, isFieldFocused: $isPasswordFocused, placeholder: "Password", isSecureTextEntry: true)
             FormPrimaryButton(title: "Next", action: { isLoggedIn = true })
-            Text("Forgot password?")
             FormSeparator(text: "or")
-            SocialSignInButton(image: "apple.logo", title: "Sign in with Apple", action: { isLoggedIn = true })
-            SocialSignInButton(image: "googleLogo", title: "Sign in with Google", isSFImage: false, action: { isLoggedIn = true })
-            Text("Sign up here")
+            SocialSignInButton(image: "apple.logo", title: "Continue with Apple", action: { isLoggedIn = true })
+            SocialSignInButton(image: "googleLogo", title: "Continue with Google", isSFImage: false, action: { isLoggedIn = true })
         }
         .padding()
     }
@@ -76,7 +71,7 @@ struct SocialSignInButton: View {
     let title: String
     var isSFImage: Bool = true
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
             HStack {
@@ -108,5 +103,5 @@ struct SocialSignInButton: View {
 
 // MARK: - Preview
 #Preview {
-    SignUpView()
+    EmailEntryView()
 }

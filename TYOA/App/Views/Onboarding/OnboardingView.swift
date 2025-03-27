@@ -34,7 +34,7 @@ struct OnboardingView: View {
                 
                 Spacer()
 
-                PrimaryNavButton(text: "Get Started", destination: SignUpView())
+                PrimaryNavButton(text: "Get Started", destination: EmailEntryView())
                 
                 Spacer()
                 

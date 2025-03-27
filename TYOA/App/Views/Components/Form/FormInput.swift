@@ -10,48 +10,44 @@ import SwiftUI
 struct FormInput: View {
     @Binding var text: String
     @FocusState.Binding var isFieldFocused: Bool
-    
+
     let placeholder: String
     var isSecureTextEntry: Bool = false
-    
+
     var body: some View {
-        VStack {
-            if isSecureTextEntry {
-                SecureField(placeholder, text: $text)
-                    .padding()
-                    .background(isFieldFocused ? Color.cardBackground : Color.clear)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
-                    )
-                    .focused($isFieldFocused)
-            } else {
-                TextField(placeholder, text: $text)
-                    .padding()
-                    .background(isFieldFocused ? Color.cardBackground : Color.clear)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
-                    )
-                    .focused($isFieldFocused)
-            }
+        inputField()
+            .padding()
+            .background(isFieldFocused ? Color.cardBackground : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isFieldFocused ? Color.secondary : Color.primary, lineWidth: 1)
+            )
+            .focused($isFieldFocused)
+            .autocorrectionDisabled(true)
+    }
+    
+    @ViewBuilder
+    private func inputField() -> some View {
+        if isSecureTextEntry {
+            SecureField(placeholder, text: $text)
+        } else {
+            TextField(placeholder, text: $text)
         }
     }
 }
-    
-    struct FormInput_Previews: PreviewProvider {
-        struct PreviewWrapper: View {
-            @State private var text = ""
-            @FocusState private var isFieldFocused: Bool
-            
-            var body: some View {
-                FormInput(text: $text, isFieldFocused: $isFieldFocused, placeholder: "Email Address", isSecureTextEntry: true)
-            }
-        }
-        
-        static var previews: some View {
-            PreviewWrapper()
+
+struct FormInput_Previews: PreviewProvider {
+    struct PreviewWrapper: View {
+        @State private var text = ""
+        @FocusState private var isFieldFocused: Bool
+
+        var body: some View {
+            FormInput(text: $text, isFieldFocused: $isFieldFocused, placeholder: "Email Address", isSecureTextEntry: true)
         }
     }
+
+    static var previews: some View {
+        PreviewWrapper()
+    }
+}
