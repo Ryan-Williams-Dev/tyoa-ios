@@ -20,6 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct TYOAApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
     var sharedModelContainer: ModelContainer = {
