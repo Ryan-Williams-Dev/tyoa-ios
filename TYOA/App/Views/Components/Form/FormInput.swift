@@ -25,6 +25,7 @@ struct FormInput: View {
             )
             .focused($isFieldFocused)
             .autocorrectionDisabled(true)
+            .autocapitalization(.none)
     }
     
     @ViewBuilder

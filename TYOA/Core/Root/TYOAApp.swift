@@ -22,6 +22,7 @@ struct TYOAApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @StateObject var viewModel = AuthViewModel()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -39,6 +40,7 @@ struct TYOAApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(viewModel)
         }
         .modelContainer(sharedModelContainer)
     }
