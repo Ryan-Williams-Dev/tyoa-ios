@@ -47,6 +47,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				App/Views/Components/SettingsRowView.swift,
+				App/Views/LoadingView.swift,
 				App/Views/Profile/ProfileView.swift,
 				"GoogleService-Info.plist",
 			);
@@ -56,6 +57,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				App/Views/Components/SettingsRowView.swift,
+				App/Views/LoadingView.swift,
 				App/Views/Profile/ProfileView.swift,
 				"GoogleService-Info.plist",
 			);
