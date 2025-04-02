@@ -16,8 +16,8 @@ struct SignInView: View {
     var body: some View {
         
         VStack {
-            SignUpHeaderView()
-            SignUpFormView(email: $email, password: $password, isEmailFocused: $isEmailFocused, isPasswordFocused: $isPasswordFocused)
+            SignInHeaderView()
+            SignInFormView(email: $email, password: $password, isEmailFocused: $isEmailFocused, isPasswordFocused: $isPasswordFocused)
             Spacer()
             HStack(spacing: 2) {
                 Text("Don't have an account?")
@@ -45,7 +45,7 @@ struct SignInView: View {
 }
 
 // MARK: - Header
-struct SignUpHeaderView: View {
+struct SignInHeaderView: View {
     var body: some View {
         VStack(spacing: 16) {
             Image("logo")
@@ -60,7 +60,7 @@ struct SignUpHeaderView: View {
 }
 
 // MARK: - Form
-struct SignUpFormView: View {
+struct SignInFormView: View {
     @Binding var email: String
     @Binding var password: String
     @FocusState.Binding var isEmailFocused: Bool
@@ -76,8 +76,8 @@ struct SignUpFormView: View {
                 Task { try await authViewModel.signIn(withEmail: email, password: password) }
             })
             FormSeparator(text: "or")
-            SocialSignInButton(image: "apple.logo", title: "Continue with Apple", action: { isLoggedIn = true })
-            SocialSignInButton(image: "googleLogo", title: "Continue with Google", isSFImage: false, action: { isLoggedIn = true })
+            SocialSignInButton(image: "apple.logo", title: "Sign in with Apple", action: { isLoggedIn = true })
+            SocialSignInButton(image: "googleLogo", title: "Sign in with Google", isSFImage: false, action: { isLoggedIn = true })
         }
         .padding()
     }

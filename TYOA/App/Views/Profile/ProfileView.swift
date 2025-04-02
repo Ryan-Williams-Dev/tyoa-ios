@@ -8,62 +8,64 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
-        List {
-            Section {
-                HStack {
-                    Text(User.MOCK_USER.initials)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.white)
-                        .frame(width: 72, height: 72)
-                        .background(Color.secondary.opacity(0.4))
-                        .clipShape(Circle())
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(User.MOCK_USER.fullName)
-                            .font(.subheadline)
+        if let user = authViewModel.currentUser {
+            List {
+                Section {
+                    HStack(spacing: 16) {
+                        Text(user.initials)
+                            .font(.title)
                             .fontWeight(.semibold)
-                        Text(User.MOCK_USER.email)
-                            .font(.footnote)
-                            .foregroundColor(Color.secondary)
+                            .foregroundColor(Color.white)
+                            .frame(width: 72, height: 72)
+                            .background(Color.secondary.opacity(0.4))
+                            .clipShape(Circle())
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(user.fullName)
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            Text(user.email)
+                                .font(.subheadline)
+                                .foregroundColor(Color.secondary)
+                        }
                     }
+                    
+                    
                 }
                 
-                
-            }
-            
-            Section("General") {
-                HStack {
-                    SettingsRowView(imageName: "gear", title: "Version")
-                    Spacer()
-                    Text("1.0.0").font(.subheadline).foregroundStyle(.secondary)
+                Section("General") {
+                    HStack {
+                        SettingsRowView(imageName: "gear", title: "Version")
+                        Spacer()
+                        Text("0.1.0").font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    
                 }
                 
-            }
-            
-            Section("Account") {
-                Button {
-                    print("Change password button")
-                } label: {
-                    SettingsRowView(imageName: "pencil", title: "Change Password")
+                Section("Account") {
+                    Button {
+                        print("Change password button")
+                    } label: {
+                        SettingsRowView(imageName: "pencil", title: "Change Password")
+                    }
+                    
+                    Button {
+                        Task { await authViewModel.signOut() }
+                    } label: {
+                        SettingsRowView(imageName: "arrow.left.circle", title: "Sign Out")
+                    }
+                    
                 }
                 
-                Button {
-                    isLoggedIn = false
-                } label: {
-                    SettingsRowView(imageName: "arrow.left.circle", title: "Sign Out")
-                }
-               
-            }
-            
-            Section("Danger Zone") {
-                Button {
-                    print("Delete Account...")
-                } label: {
-                    SettingsRowView(imageName: "xmark.circle.fill", title: "Delete Account", tintColor: Color.red)
+                Section("Danger Zone") {
+                    Button {
+                        print("Delete Account...")
+                    } label: {
+                        SettingsRowView(imageName: "xmark.circle.fill", title: "Delete Account", tintColor: Color.red)
+                    }
                 }
             }
         }
@@ -71,5 +73,13 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    let mockViewModel = AuthViewModel()
+    mockViewModel.currentUser = User(
+        id: "preview-user-id",
+        email: "preview@example.com",
+        fullName: "Preview User"
+    )
+    
+    return ProfileView()
+        .environmentObject(mockViewModel)
 }

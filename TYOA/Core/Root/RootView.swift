@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @State var splashScreenShown: Bool = true
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         if splashScreenShown {
@@ -21,8 +21,8 @@ struct RootView: View {
                 }
             }
         } else {
-            if isLoggedIn {
-                HomeView() 
+            if authViewModel.userSession != nil {
+                ProfileView()
             } else {
                 OnboardingView()
             }

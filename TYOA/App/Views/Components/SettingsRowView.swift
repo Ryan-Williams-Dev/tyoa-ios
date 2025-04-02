@@ -17,6 +17,7 @@ struct SettingsRowView: View {
             Image(systemName: imageName)
                 .foregroundColor(tintColor)
                 .font(.title)
+                .padding(.vertical, 2)
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(.primaryText)

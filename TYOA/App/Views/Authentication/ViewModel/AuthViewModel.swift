@@ -10,11 +10,12 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 
+@MainActor
 class AuthViewModel: ObservableObject {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
-    var isExistingUser: Bool = false
-    var errorMessage: String?
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
     
     private let auth = Auth.auth()
     
@@ -30,32 +31,117 @@ class AuthViewModel: ObservableObject {
     
     
     func signIn(withEmail email: String, password: String) async throws {
-        print(email, password)
+        self.errorMessage = nil
+        self.isLoading = true
+        
+        do {
+            let result = try await auth.signIn(withEmail: email, password: password)
+            self.userSession = result.user
+            await fetchUserData()
+            self.isLoading = false
+        } catch {
+            self.isLoading = false
+            self.errorMessage = error.localizedDescription
+            throw error
+        }
     }
     
     func createUser(withEmail email: String, password: String, fullName: String) async throws {
+        self.isLoading = true
+        self.errorMessage = nil
+        
         do {
             let result = try await auth.createUser(withEmail: email, password: password)
             self.userSession = result.user
+            
             let user = User(id: result.user.uid, email: email, fullName: fullName)
             let encodedUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(result.user.uid).setData(encodedUser)
+            
+            self.currentUser = user
+            self.isLoading = false
         } catch {
+            self.isLoading = false
+            self.errorMessage = "Failed to create account: \(error.localizedDescription)"
             print("DEBUG: Error creating user: \(error.localizedDescription)")
+            throw error
         }
     }
     
     func signOut() async {
+        self.errorMessage = nil
         
+        do {
+            try auth.signOut()
+            self.userSession = nil
+            self.currentUser = nil
+        } catch {
+            self.errorMessage = "Failed to sign out: \(error.localizedDescription)"
+        }
     }
     
     func deleteUser() async {
+        guard let user = auth.currentUser else {
+            self.errorMessage = "No user is currently signed in"
+            return
+        }
         
+        self.isLoading = true
+        self.errorMessage = nil
+        
+        do {
+            try await Firestore.firestore().collection("users").document(user.uid).delete()
+            
+            try await user.delete()
+            
+            self.userSession = nil
+            self.currentUser = nil
+        } catch {
+            self.errorMessage = "Failed to delete account: \(error.localizedDescription)"
+        }
+        
+        self.isLoading = false
     }
     
     func fetchUserData() async {
+        guard let uid = auth.currentUser?.uid else {
+            print("DEBUG: No authenticated user found")
+            return
+        }
         
+        do {
+            self.isLoading = true
+            
+            let docSnapshot = try await Firestore.firestore().collection("users").document(uid).getDocument()
+            
+            if docSnapshot.exists {
+                let user = try docSnapshot.data(as: User.self)
+                self.currentUser = user
+            } else {
+                print("DEBUG: User document does not exist for uid: \(uid)")
+                self.errorMessage = "User profile not found"
+            }
+        } catch {
+            print("DEBUG: Error fetching user data: \(error.localizedDescription)")
+            self.errorMessage = "Failed to load profile: \(error.localizedDescription)"
+        }
+        
+        self.isLoading = false
     }
     
+    func resetPassword(forEmail email: String) async -> Bool {
+        self.isLoading = true
+        self.errorMessage = nil
+        
+        do {
+            try await auth.sendPasswordReset(withEmail: email)
+            self.isLoading = false
+            return true
+        } catch {
+            self.isLoading = false
+            self.errorMessage = "Failed to send password reset: \(error.localizedDescription)"
+            return false
+        }
+    }
 }
 
