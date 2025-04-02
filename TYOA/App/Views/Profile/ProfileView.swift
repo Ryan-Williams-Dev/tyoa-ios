@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var isPresentingConfirmation: Bool = false
+    @State private var password: String = ""
+    @State private var showReauthDialog: Bool = false
     
     var body: some View {
         if let user = authViewModel.currentUser {
@@ -62,14 +65,48 @@ struct ProfileView: View {
                 
                 Section("Danger Zone") {
                     Button {
-                        print("Delete Account...")
+                        isPresentingConfirmation = true
                     } label: {
                         SettingsRowView(imageName: "xmark.circle.fill", title: "Delete Account", tintColor: Color.red)
                     }
+                    .confirmationDialog(
+                        "Delete Account",
+                        isPresented: $isPresentingConfirmation,
+                        titleVisibility: .visible
+                    ) {
+                        Button("Delete", role: .destructive) {
+                            showReauthDialog = true
+                        }
+                        
+                        Button("Cancel", role: .cancel) {
+                        }
+                    } message: {
+                        Text("Are you sure you want to delete your account? This action cannot be undone, and all your data will be permanently lost.")
+                    }
                 }
             }
+            .alert("Confirm with Password", isPresented: $showReauthDialog) {
+                SecureField("Password", text: $password)
+                
+                Button("Cancel", role: .cancel) {
+                    password = ""
+                }
+                
+                Button("Delete Account", role: .destructive) {
+                    Task {
+                        if await authViewModel.reauthenticateUser(password: password) {
+                            await authViewModel.deleteUser()
+                        }
+                        password = ""
+                    }
+                }
+            } message: {
+                Text("For security, please enter your password to delete your account.")
+            }
         }
+        
     }
+    
 }
 
 #Preview {

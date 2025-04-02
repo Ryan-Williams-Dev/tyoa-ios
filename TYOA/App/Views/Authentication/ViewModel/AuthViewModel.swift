@@ -96,7 +96,10 @@ class AuthViewModel: ObservableObject {
             
             self.userSession = nil
             self.currentUser = nil
+            
+            print("DEBUG: User successfully deleted")
         } catch {
+            print("DEBUG: Error deleting user: \(error.localizedDescription)")
             self.errorMessage = "Failed to delete account: \(error.localizedDescription)"
         }
         
@@ -119,7 +122,8 @@ class AuthViewModel: ObservableObject {
                 self.currentUser = user
             } else {
                 print("DEBUG: User document does not exist for uid: \(uid)")
-                self.errorMessage = "User profile not found"
+                await signOut()
+                self.errorMessage = "Your account data could not be found. You have been signed out."
             }
         } catch {
             print("DEBUG: Error fetching user data: \(error.localizedDescription)")
@@ -140,6 +144,27 @@ class AuthViewModel: ObservableObject {
         } catch {
             self.isLoading = false
             self.errorMessage = "Failed to send password reset: \(error.localizedDescription)"
+            return false
+        }
+    }
+    
+    func reauthenticateUser(password: String) async -> Bool {
+        guard let user = auth.currentUser, let email = user.email else {
+            self.errorMessage = "No current user found"
+            return false
+        }
+        
+        self.isLoading = true
+        
+        do {
+            let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+            try await user.reauthenticate(with: credential)
+            self.isLoading = false
+            return true
+        } catch {
+            self.errorMessage = "Re-authentication failed: \(error.localizedDescription)"
+            print("DEBUG: Re-authentication error: \(error.localizedDescription)")
+            self.isLoading = false
             return false
         }
     }
