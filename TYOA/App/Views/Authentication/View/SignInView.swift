@@ -72,7 +72,7 @@ struct SignInFormView: View {
         VStack(spacing: 16) {
             FormInput(text: $email, isFieldFocused: $isEmailFocused, placeholder: "Email Address")
             FormInput(text: $password, isFieldFocused: $isPasswordFocused, placeholder: "Password", isSecureTextEntry: true)
-            FormPrimaryButton(title: "Next", action: {
+            FormPrimaryButton(title: "Next", isLoading: $authViewModel.isLoading, action: {
                 Task { try await authViewModel.signIn(withEmail: email, password: password) }
             })
             FormSeparator(text: "or")
@@ -122,4 +122,5 @@ struct SocialSignInButton: View {
 // MARK: - Preview
 #Preview {
     SignInView()
+        .environmentObject(AuthViewModel())
 }

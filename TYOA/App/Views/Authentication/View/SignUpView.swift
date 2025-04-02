@@ -91,7 +91,7 @@ struct SignUpFormView: View {
             FormInput(text: $fullName, isFieldFocused: $isFullNameFocused, placeholder: "Full Name")
             FormInput(text: $password, isFieldFocused: $isPasswordFocused, placeholder: "Password", isSecureTextEntry: true)
             FormInput(text: $confirmPassword, isFieldFocused: $isConfirmPasswordFocused, placeholder: "Confirm Password", isSecureTextEntry: true)
-            FormPrimaryButton(title: "Next", action: {
+            FormPrimaryButton(title: "Next",isLoading: $authViewModel.isLoading, action: {
                 Task { try await authViewModel.createUser(withEmail: email, password: password, fullName: fullName) }
             })
             FormSeparator(text: "or")
@@ -141,4 +141,5 @@ struct SocialSignUpButton: View {
 // MARK: - Preview
 #Preview {
     SignUpView()
+        .environmentObject(AuthViewModel())
 }
