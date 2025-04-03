@@ -14,17 +14,14 @@ struct LoadingView: View {
     private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        VStack(spacing: 128) {
+        VStack() {
             Spacer()
             
-            VStack(spacing: 8) {
-                Image("logo")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                Text("Echo.")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-            }
+            LogoHeader()
+            
+            Spacer()
+            
+            ProgressView().scaleEffect(x: 1.5, y: 1.5)
             
             Spacer()
             

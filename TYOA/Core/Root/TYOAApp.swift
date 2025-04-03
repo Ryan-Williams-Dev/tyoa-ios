@@ -21,7 +21,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct TYOAApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @StateObject var viewModel = AuthViewModel()
     
     var sharedModelContainer: ModelContainer = {

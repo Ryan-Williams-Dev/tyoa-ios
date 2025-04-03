@@ -10,11 +10,7 @@ import SwiftUI
 struct SplashView: View {
     var body: some View {
         VStack(spacing: 16) {
-            Image("logo")
-                .resizable()
-                .frame(width: 200, height: 200)
-            Text("Echo.")
-                .font(.title.bold())
+            LogoHeader()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background.ignoresSafeArea())

@@ -21,11 +21,16 @@ struct RootView: View {
                 }
             }
         } else {
-            if authViewModel.userSession != nil {
-                ProfileView()
+            if authViewModel.isLoading {
+                LoadingView()
             } else {
-                OnboardingView()
+                if authViewModel.userSession != nil {
+                    ProfileView()
+                } else {
+                    OnboardingView()
+                }
             }
+            
         }
         
     }

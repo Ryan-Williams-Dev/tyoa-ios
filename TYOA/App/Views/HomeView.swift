@@ -11,7 +11,6 @@ import SwiftUI
 struct HomeView: View {
     @State var moodLevel: Double = 0.5
     @Environment(\.colorScheme) var colorScheme
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
     var body: some View {
         VStack {
@@ -58,7 +57,7 @@ struct HomeView: View {
             .padding(.horizontal, 40)
             
             Button(action: {
-                isLoggedIn = false
+                
             }) {
                 Image(systemName: "chevron.left")
                     .resizable()

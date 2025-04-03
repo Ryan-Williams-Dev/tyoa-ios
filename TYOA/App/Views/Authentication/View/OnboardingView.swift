@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingView: View {
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
-    
+struct OnboardingView: View {    
     var body: some View {
         NavigationStack {
             VStack {

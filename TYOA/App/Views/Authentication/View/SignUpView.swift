@@ -20,7 +20,7 @@ struct SignUpView: View {
     var body: some View {
         ScrollView {
             VStack {
-                SignUpHeaderView()
+                FormHeaderView("Sign up")
                 SignUpFormView(email: $email,
                                fullName: $fullName,
                                password: $password,
@@ -57,20 +57,7 @@ struct SignUpView: View {
     
 }
 
-// MARK: - Header
-struct SignUpHeaderView: View {
-    var body: some View {
-        VStack(spacing: 16) {
-            Image("logo")
-                .resizable()
-                .frame(width: 200, height: 200)
-            Text("Sign up")
-                .font(.title)
-                .fontWeight(.bold)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
+
 
 // MARK: - Form
 struct SignUpFormView: View {
@@ -82,7 +69,6 @@ struct SignUpFormView: View {
     @FocusState.Binding var isFullNameFocused: Bool
     @FocusState.Binding var isPasswordFocused: Bool
     @FocusState.Binding var isConfirmPasswordFocused: Bool
-    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
@@ -90,53 +76,46 @@ struct SignUpFormView: View {
             FormInput(text: $email, isFieldFocused: $isEmailFocused, placeholder: "Email Address")
             FormInput(text: $fullName, isFieldFocused: $isFullNameFocused, placeholder: "Full Name")
             FormInput(text: $password, isFieldFocused: $isPasswordFocused, placeholder: "Password", isSecureTextEntry: true)
-            FormInput(text: $confirmPassword, isFieldFocused: $isConfirmPasswordFocused, placeholder: "Confirm Password", isSecureTextEntry: true)
-            FormPrimaryButton(title: "Next",isLoading: $authViewModel.isLoading, action: {
+            ZStack(alignment: .trailing) {
+                FormInput(text: $confirmPassword, isFieldFocused: $isConfirmPasswordFocused, placeholder: "Confirm Password", isSecureTextEntry: true)
+                if !confirmPassword.isEmpty && !password.isEmpty {
+                    if password != confirmPassword {
+                        Image(systemName: "exclamationmark.triangle")
+                            .foregroundColor(.primary)
+                            .imageScale(.large)
+                            .padding(.trailing, 12)
+                    } else {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                            .padding(.trailing, 12)
+                    }
+                }
+            }
+            FormPrimaryButton(title: "Next",isLoading: $authViewModel.isLoading, isDisabled: !formIsValid, action: {
                 Task { try await authViewModel.createUser(withEmail: email, password: password, fullName: fullName) }
             })
             FormSeparator(text: "or")
-            SocialSignInButton(image: "apple.logo", title: "Sign up with Apple", action: { isLoggedIn = true })
-            SocialSignInButton(image: "googleLogo", title: "Sign up with Google", isSFImage: false, action: { isLoggedIn = true })
+            SocialSignInButton(image: "apple.logo", title: "Sign up with Apple", action: {  })
+            SocialSignInButton(image: "googleLogo", title: "Sign up with Google", isSFImage: false, action: {  })
         }
         .padding()
     }
 }
 
-// MARK: - Components
-struct SocialSignUpButton: View {
-    let image: String
-    let title: String
-    var isSFImage: Bool = true
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack {
-                if isSFImage {
-                    Image(systemName: image)
-                        .foregroundColor(.primaryText)
-                } else {
-                    Image(image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                }
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(.primaryText)
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.cardBackground)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(Color.primaryButton.opacity(0.2), lineWidth: 1)
-            )
-            .cornerRadius(12)
-            .tint(Color.primary)
-        }
+// MARK: - Form Validation
+
+extension SignUpFormView: AuthenticationFormProtocol {
+    var formIsValid: Bool {
+        return !email.isEmpty
+        && email.contains("@")
+        && !password.isEmpty
+        && password.count > 5
+        && !fullName.isEmpty
+        && confirmPassword == password
     }
 }
+
 
 // MARK: - Preview
 #Preview {
