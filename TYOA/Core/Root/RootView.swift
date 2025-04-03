@@ -25,7 +25,7 @@ struct RootView: View {
                 LoadingView()
             } else {
                 if authViewModel.userSession != nil {
-                    ProfileView()
+                    HomeView()
                 } else {
                     OnboardingView()
                 }

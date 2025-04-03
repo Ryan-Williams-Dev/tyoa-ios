@@ -7,87 +7,107 @@
 
 import SwiftUI
 
-
 struct HomeView: View {
-    @State var moodLevel: Double = 0.5
-    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var sliderValue: CGPoint = CGPoint(x: 0.5, y: 0.5)
     
     var body: some View {
-        VStack {
-            VStack(spacing: 8){
-                Text("How would you rate your mood today?")
+        if let user = authViewModel.currentUser {
+            NavigationStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Image("logo").resizable().frame(width: 50, height: 50)
+                        Text("Echo.").fontWeight(.bold).font(.title2)
+                        
+                        Spacer()
+                        
+                        NavigationLink(destination: ProfileView()) {
+                            Image(systemName: "gearshape")
+                                .foregroundColor(.primary)
+                                .font(.title2)
+                        }
+                    }
+                    
+                    Spacer()
+                    Text("""
+                         Hello, \(user.firstName).
+                         How are you feeling today?
+                         """)
                     .font(.title)
-                    .multilineTextAlignment(.center)
-                Text("Slide the bar to a level that feels right for you")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(Color.secondaryText)
-            }
-            .padding()
-            
-            
-            VStack  {
-                Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                Text(moodText)
-                    .font(.title)
-                    .padding()
-                Slider(value: $moodLevel, in: 0...1) {
+                    
+                    TwoDSlider(sliderValue: $sliderValue)
+                    
+                    Spacer()
+                    
+                    
                 }
-                .padding()
-                .tint(Color.primaryText)
+                .padding(16)
+                .withAppBackground()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            
-            
-            
-            Button(action: {
-                print("Next tapped")
-            }) {
-                Text("Next")
-                    .font(.headline)
-                    .foregroundColor(Color.primaryButtonText)
-                    .padding()
-                    .padding(.horizontal, 16)
-                    .background(Color.primaryButton)
-                    .cornerRadius(25)
-            }
-            .padding(.horizontal, 40)
-            
-            Button(action: {
-                
-            }) {
-                Image(systemName: "chevron.left")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.primary)
-            }
-            .buttonStyle(.plain)
+            .tint(.primary)
         }
-        .padding()
-        .background(Color.background)
     }
+}
+
+struct TwoDSlider: View {
+    @State private var dragPosition: CGPoint = .zero
+    @Binding var sliderValue: CGPoint
     
-    private var moodText: String {
-        switch moodLevel {
-        case 0..<0.2:
-            return "I feel very sad"
-        case 0.20..<0.4:
-            return "I feel a bit down"
-        case 0.4..<0.6:
-            return "I feel content"
-        case 0.6..<0.8:
-            return "I feel good"
-        default:
-            return "I feel fantastic!"
+    private let selectionFeedback = UISelectionFeedbackGenerator()
+    
+    var body: some View {
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height)
+            let handleRadius: CGFloat = 30
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 2)
+                    .frame(width: size, height: size)
+                
+                Circle()
+                    .fill(Color.primary)
+                    .frame(width: handleRadius, height: handleRadius)
+                    .position(x: dragPosition.x, y: dragPosition.y)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                // Clamp the handle's position to remain within the square
+                                let clampedX = min(max(value.location.x, 0), size)
+                                let clampedY = min(max(value.location.y, 0), size)
+                                dragPosition = CGPoint(x: clampedX, y: clampedY)
+                                
+                                // Update the binding with normalized values (0...1)
+                                sliderValue = CGPoint(x: clampedX / size, y: clampedY / size)
+                                
+                                // Prepare and trigger haptic feedback
+                                selectionFeedback.prepare()
+                                selectionFeedback.selectionChanged()
+                            }
+                    )
+                    .onAppear {
+                        // Initialize the handle's position based on the current slider value
+                        dragPosition = CGPoint(
+                            x: sliderValue.x * size,
+                            y: sliderValue.y * size
+                        )
+                    }
+            }
+            .frame(width: size, height: size)
         }
+        .aspectRatio(1, contentMode: .fit)
     }
 }
 
 
 #Preview {
-    HomeView()
+    let mockViewModel = AuthViewModel()
+    mockViewModel.currentUser = User(
+        id: "test-user-id",
+        email: "test@example.com",
+        fullName: "Test User"
+    )
+    
+    return HomeView()
+        .environmentObject(mockViewModel)
 }

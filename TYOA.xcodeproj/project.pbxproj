@@ -46,6 +46,7 @@
 		4ED3EAF72D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOATests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/Views/Components/AppBackgroundModifier.swift,
 				App/Views/Components/LogoHeader.swift,
 				App/Views/Components/SettingsRowView.swift,
 				App/Views/LoadingView.swift,
@@ -57,6 +58,7 @@
 		4ED3EAF82D95C611004863E6 /* Exceptions for "TYOA" folder in "TYOAUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/Views/Components/AppBackgroundModifier.swift,
 				App/Views/Components/LogoHeader.swift,
 				App/Views/Components/SettingsRowView.swift,
 				App/Views/LoadingView.swift,
