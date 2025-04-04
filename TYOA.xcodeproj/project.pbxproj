@@ -48,6 +48,7 @@
 			membershipExceptions = (
 				App/Views/Components/AppBackgroundModifier.swift,
 				App/Views/Components/LogoHeader.swift,
+				App/Views/Components/MoodEnergySlider.swift,
 				App/Views/Components/SettingsRowView.swift,
 				App/Views/LoadingView.swift,
 				App/Views/Profile/ProfileView.swift,
@@ -60,6 +61,7 @@
 			membershipExceptions = (
 				App/Views/Components/AppBackgroundModifier.swift,
 				App/Views/Components/LogoHeader.swift,
+				App/Views/Components/MoodEnergySlider.swift,
 				App/Views/Components/SettingsRowView.swift,
 				App/Views/LoadingView.swift,
 				App/Views/Profile/ProfileView.swift,
