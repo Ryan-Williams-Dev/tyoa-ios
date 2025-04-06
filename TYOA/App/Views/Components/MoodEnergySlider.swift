@@ -46,20 +46,13 @@ struct SliderContent: View {
             let size = min(geometry.size.width, geometry.size.height)
             
             ZStack {
-                // Grid lines using Shape instead of Canvas
                 GridLines(lineCount: lineCount)
                     .stroke(Color.gray.opacity(0.3), lineWidth: 0.5)
                 
-                // Border
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.gray, lineWidth: 2)
                 
-                // Quadrant labels
                 QuadrantLabels()
-                
-                // Axis Labels inside the square
-                
-                // "Drive" label - vertical along left edge
                 
                 Text("DRIVE")
                     .font(.caption)
@@ -68,14 +61,12 @@ struct SliderContent: View {
                     .rotationEffect(.degrees(-90))
                     .position(x: 25, y: size / 2)
                 
-                // "Mood" label - horizontal along bottom
                 Text("MOOD")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
                     .position(x: size / 2, y: size - 25)
-                
-                // Handle
+
                 Circle()
                     .fill(Color.primary)
                     .frame(width: handleRadius, height: handleRadius)
@@ -91,7 +82,6 @@ struct SliderContent: View {
                     )
             }
             .onAppear {
-                // Initialize handle position on first appearance
                 self.size = size
                 updateHandlePosition()
             }
@@ -106,10 +96,7 @@ struct SliderContent: View {
     }
     
     private func updateHandlePosition() {
-        // Avoid division by zero with a safety check
         guard size > handleRadius else { return }
-        
-        // Calculate handle position from normalized slider value
         dragPosition = CGPoint(
             x: (sliderValue.x * (size - handleRadius)) + handleRadius/2,
             y: (sliderValue.y * (size - handleRadius)) + handleRadius/2
@@ -117,19 +104,15 @@ struct SliderContent: View {
     }
     
     private func handleDrag(value: DragGesture.Value, size: CGFloat) {
-        // Clamp position to boundaries
         let clampedX = min(max(value.location.x, handleRadius/2), size - handleRadius/2)
         let clampedY = min(max(value.location.y, handleRadius/2), size - handleRadius/2)
         
-        // Update visible handle position
         dragPosition = CGPoint(x: clampedX, y: clampedY)
         
-        // Calculate normalized slider values
         let normalizedX = (clampedX - handleRadius/2) / (size - handleRadius)
         let normalizedY = (clampedY - handleRadius/2) / (size - handleRadius)
         sliderValue = CGPoint(x: normalizedX, y: normalizedY)
         
-        // Provide feedback with a reasonable minimum interval
         let now = Date()
         if now.timeIntervalSince(lastFeedbackTime) > 0.1 {
             selectionFeedback.impactOccurred()
@@ -172,22 +155,19 @@ struct QuadrantLabels: View {
     }
 }
 
-// Using Shape instead of Canvas for better compatibility
 struct GridLines: Shape {
     let lineCount: Int
     
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let step = rect.width / CGFloat(lineCount)
-        
-        // Horizontal lines
+
         for i in 1..<lineCount {
             let y = step * CGFloat(i)
             path.move(to: CGPoint(x: 0, y: y))
             path.addLine(to: CGPoint(x: rect.width, y: y))
         }
         
-        // Vertical lines
         for i in 1..<lineCount {
             let x = step * CGFloat(i)
             path.move(to: CGPoint(x: x, y: 0))
@@ -198,7 +178,6 @@ struct GridLines: Shape {
     }
 }
 
-// Preview for testing
 struct MoodEnergySlider_Previews: PreviewProvider {
     static var previews: some View {
         MoodEnergySlider(

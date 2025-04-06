@@ -9,12 +9,11 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var moodEnergy: CGPoint = CGPoint(x: 0.5, y: 0.5)
     
     var body: some View {
         if let user = authViewModel.currentUser {
             NavigationStack {
-                VStack(alignment: .leading) {
+                VStack() {
                     HStack {
                         Text("Echo.").fontWeight(.bold).font(.title2)
                         
@@ -33,11 +32,12 @@ struct HomeView: View {
                          """)
                     .font(.title)
                     .padding(.top)
+                    .multilineTextAlignment(.center)
                     
                     Spacer()
                     
-                
-                    MoodEnergySlider(sliderValue: $moodEnergy)
+                    PrimaryNavButton(text: "Next", destination: ProfileView())
+                    StepProgressIndicator(currentStep: 0, totalSteps: 5).padding()
                     
                 }
                 .padding(32)
