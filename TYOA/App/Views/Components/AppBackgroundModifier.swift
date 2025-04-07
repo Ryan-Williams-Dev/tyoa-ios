@@ -13,10 +13,8 @@ struct AppBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
         ZStack {
             backgroundColor
-                .edgesIgnoringSafeArea(.all) // Only the background ignores safe area
-            
+                .edgesIgnoringSafeArea(.all)
             content
-                // Content respects safe area by default
         }
     }
 }

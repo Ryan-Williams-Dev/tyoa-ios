@@ -9,23 +9,14 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var currentStep = 0
+    @State private var navigationPath = NavigationPath()
+    @State private var moodLevel = 0.5
     
     var body: some View {
         if let user = authViewModel.currentUser {
-            NavigationStack {
-                VStack() {
-                    HStack {
-                        Text("Echo.").fontWeight(.bold).font(.title2)
-                        
-                        Spacer()
-                        
-                        NavigationLink(destination: ProfileView()) {
-                            Image(systemName: "gearshape")
-                                .foregroundColor(.primary)
-                                .font(.title2)
-                        }
-                    }
-                    
+            NavigationStack(path: $navigationPath) {
+                VStack {
                     Text("""
                          Hello, \(user.firstName).
                          How are you feeling today?
@@ -36,12 +27,42 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    PrimaryNavButton(text: "Next", destination: ProfileView())
-                    StepProgressIndicator(currentStep: 0, totalSteps: 5).padding()
+                    Text("How would you rate your overall mood level today?")
+                    .font(.headline)
+                    .foregroundStyle(.secondaryText)
+                    .multilineTextAlignment(.center)
                     
+                    Spacer()
+                    
+                    Slider(value: $moodLevel)
+                    
+                    Spacer()
+                    
+                    NextInFlowButton(
+                        "Next",
+                        navigationPath: $navigationPath,
+                        destination: "step-2"
+                    )
+                    StepProgressIndicator(currentStep: currentStep, totalSteps: 5).padding()
                 }
-                .padding(32)
+                .padding(.horizontal, 32)
                 .withAppBackground()
+                .customNavigationBar(navigationPath: $navigationPath)
+                .onAppear {
+                    currentStep = 0
+                }
+                
+                .navigationDestination(for: String.self) { route in
+                    switch route {
+                    case "profile":
+                        ProfileView(navigationPath: $navigationPath)
+                            .environmentObject(authViewModel)
+                    case "step-2":
+                        EnergyInputView(navigationPath: $navigationPath, currentStep: $currentStep)
+                    default:
+                        Text("Unknown route")
+                    }
+                }
             }
             .tint(.primary)
         }
