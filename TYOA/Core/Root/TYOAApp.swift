@@ -20,8 +20,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct TYOAApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var authViewModel = AuthViewModel()
     
-    @StateObject var viewModel = AuthViewModel()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -39,7 +39,7 @@ struct TYOAApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environmentObject(viewModel)
+                .environmentObject(authViewModel)
         }
         .modelContainer(sharedModelContainer)
     }

@@ -32,7 +32,7 @@ struct CustomNavigationBar: ViewModifier {
                 if hasSettings {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            navigationPath.append("profile")
+                            navigationPath.append("settings")
                         } label: {
                             Image(systemName: "gearshape")
                                 .foregroundColor(.primary)

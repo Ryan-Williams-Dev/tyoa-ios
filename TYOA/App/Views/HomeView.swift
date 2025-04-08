@@ -9,9 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var currentStep = 0
+    @StateObject private var moodEntryVM = MoodEntryViewModel()
     @State private var navigationPath = NavigationPath()
-    @State private var moodLevel = 0.5
     
     var body: some View {
         if let user = authViewModel.currentUser {
@@ -25,40 +24,52 @@ struct HomeView: View {
                     .padding(.top)
                     .multilineTextAlignment(.center)
                     
-                    Spacer()
+                    TabView(selection: $moodEntryVM.currentStep) {
+                        // Step 1
+                        MoodInputView(moodLevel: $moodEntryVM.moodLevel)
+                            .tag(0)
+                        
+                        // Step 2
+                        EnergyInputView(driveLevel: $moodEntryVM.energyLevel)
+                            .tag(1)
+                        
+                        // Step 3
+                        Text("Step 3 Content: Focus")
+                            .tag(2)
+                        
+                        // Step 4
+                        Text("Step 4 Content: Anxiety")
+                            .tag(3)
+                        
+                        // Step 5
+                        Text("Step 5 Content: Tags")
+                            .tag(4)
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .animation(.easeInOut, value: moodEntryVM.currentStep)
+//                    .disabled(true) // Disable swiping - Undecided
                     
-                    Text("How would you rate your overall mood level today?")
-                    .font(.headline)
-                    .foregroundStyle(.secondaryText)
-                    .multilineTextAlignment(.center)
+                    navigationButtons
                     
-                    Spacer()
-                    
-                    Slider(value: $moodLevel)
-                    
-                    Spacer()
-                    
-                    NextInFlowButton(
-                        "Next",
-                        navigationPath: $navigationPath,
-                        destination: "step-2"
-                    )
-                    StepProgressIndicator(currentStep: currentStep, totalSteps: 5).padding()
+                    StepProgressIndicator(currentStep: moodEntryVM.currentStep, totalSteps: moodEntryVM.totalSteps)
+                        .padding()
                 }
                 .padding(.horizontal, 32)
                 .withAppBackground()
                 .customNavigationBar(navigationPath: $navigationPath)
                 .onAppear {
-                    currentStep = 0
+                    moodEntryVM.userId = user.id
+                    
+                    moodEntryVM.onEntrySaved = { (entry: MoodEntry) in
+                        print("Entry saved: \(entry.id)")
+                    }
                 }
                 
                 .navigationDestination(for: String.self) { route in
                     switch route {
-                    case "profile":
-                        ProfileView(navigationPath: $navigationPath)
+                    case "settings":
+                        SettingsView(navigationPath: $navigationPath)
                             .environmentObject(authViewModel)
-                    case "step-2":
-                        EnergyInputView(navigationPath: $navigationPath, currentStep: $currentStep)
                     default:
                         Text("Unknown route")
                     }
@@ -67,8 +78,44 @@ struct HomeView: View {
             .tint(.primary)
         }
     }
+    
+    private var navigationButtons: some View {
+        HStack(spacing: 16) {
+            if moodEntryVM.canMoveToPreviousStep {
+                Button(action: { moodEntryVM.goToPreviousStep() }) {
+                    Image(systemName: "chevron.left")
+                        .fontWeight(.semibold)
+                        .font(.title2)
+                        .padding()
+                        .foregroundColor(.primary)
+                        .cornerRadius(12)
+                }.overlay {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(style: StrokeStyle(lineWidth: 2))
+                        .foregroundColor(.primary)
+                }
+            }
+            
+            Button(action: {
+                if moodEntryVM.isLastStep {
+                    moodEntryVM.submitEntryData()
+                } else {
+                    moodEntryVM.goToNextStep()
+                }
+            }) {
+                Text(moodEntryVM.isLastStep ? "Submit" : "Next")
+                    .fontWeight(.semibold)
+                    .font(.title2)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.primaryButton)
+                    .foregroundColor(Color.primaryButtonText)
+                    .cornerRadius(12)
+            }
+        }
+        .padding(.vertical)
+    }
 }
-
 #Preview {
     let mockViewModel = AuthViewModel()
     mockViewModel.currentUser = User(

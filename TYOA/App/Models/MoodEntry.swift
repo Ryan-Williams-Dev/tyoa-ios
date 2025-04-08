@@ -8,9 +8,59 @@
 import Foundation
 
 struct MoodEntry: Identifiable, Codable {
-    var id: UUID
-    var userId: UUID
-    var date: Date
-    var moodRatings: [String: Double]
-    var text: String
+    let id: UUID
+    let timestamp: Date
+    
+    let moodLevel: Double     // How happy/sad (0.0 to 1.0)
+    let energyLevel: Double   // How energetic/tired (0.0 to 1.0)
+    let focusLevel: Double    // How focused/distracted (0.0 to 1.0)
+    let anxietyLevel: Double  // How anxious/calm (0.0 to 1.0)
+    
+
+    let selectedTags: [String]
+    let text: String?
+    
+    let userId: String
+    
+    init(
+        id: UUID = UUID(),
+        timestamp: Date = Date(),
+        moodLevel: Double,
+        energyLevel: Double,
+        focusLevel: Double,
+        anxietyLevel: Double,
+        selectedTags: [String],
+        text: String? = nil,
+        userId: String
+    ) {
+        self.id = id
+        self.timestamp = timestamp
+        self.moodLevel = moodLevel
+        self.energyLevel = energyLevel
+        self.focusLevel = focusLevel
+        self.anxietyLevel = anxietyLevel
+        self.selectedTags = selectedTags
+        self.text = text
+        self.userId = userId
+    }
+}
+
+extension MoodEntry {
+    var wellbeingScore: Double {
+        let scores = [
+            moodLevel,
+            energyLevel,
+            focusLevel,
+            (1.0 - anxietyLevel) // Invert anxiety so higher is better
+        ]
+        
+        return scores.reduce(0.0, +) / Double(scores.count)
+    }
+    
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: timestamp)
+    }
 }

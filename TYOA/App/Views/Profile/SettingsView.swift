@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  SettingsView.swift
 //  TYOA
 //
 //  Created by Ryan Williams on 2025-03-28.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfileView: View {
+struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var isPresentingConfirmation: Bool = false
     @State private var password: String = ""
@@ -116,7 +116,7 @@ struct ProfileView: View {
     )
     
     return NavigationStack {
-        ProfileView(navigationPath: .constant(NavigationPath()))
+        SettingsView(navigationPath: .constant(NavigationPath()))
             .environmentObject(mockViewModel)
     }
 }

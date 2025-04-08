@@ -26,6 +26,4 @@ struct PrimaryNavButton<Destination: View>: View {
 
 
 
-#Preview {
-    PrimaryNavButton(text: "Next")
-}
+//

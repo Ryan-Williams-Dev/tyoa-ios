@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct MoodInputView: View {
+    @Binding var moodLevel: Double
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("How would you rate your overall mood level today?")
+                .font(.headline)
+                .foregroundStyle(.secondaryText)
+                .multilineTextAlignment(.center)
+            
+
+            Slider(value: $moodLevel)
+            
+
+        }
     }
 }
-
-#Preview {
-    MoodInputView()
-}
+//
+//#Preview {
+//    MoodInputView()
+//}

@@ -56,7 +56,7 @@
 				App/Views/EnergyInputView.swift,
 				App/Views/LoadingView.swift,
 				App/Views/MoodInputView.swift,
-				App/Views/Profile/ProfileView.swift,
+				App/Views/Profile/SettingsView.swift,
 				"GoogleService-Info.plist",
 			);
 			target = 4EA2C7482D7FED18004D32AF /* TYOATests */;
@@ -74,7 +74,7 @@
 				App/Views/EnergyInputView.swift,
 				App/Views/LoadingView.swift,
 				App/Views/MoodInputView.swift,
-				App/Views/Profile/ProfileView.swift,
+				App/Views/Profile/SettingsView.swift,
 				"GoogleService-Info.plist",
 			);
 			target = 4EA2C7522D7FED18004D32AF /* TYOAUITests */;
