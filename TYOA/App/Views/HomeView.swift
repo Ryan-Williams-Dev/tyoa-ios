@@ -16,106 +16,54 @@ struct HomeView: View {
         if let user = authViewModel.currentUser {
             NavigationStack(path: $navigationPath) {
                 VStack {
-                    Text("""
-                         Hello, \(user.firstName).
-                         How are you feeling today?
-                         """)
-                    .font(.title)
-                    .padding(.top)
-                    .multilineTextAlignment(.center)
+                    // Header
+                    UserGreeting(firstName: user.firstName)
                     
-                    TabView(selection: $moodEntryVM.currentStep) {
-                        // Step 1
-                        MoodInputView(moodLevel: $moodEntryVM.moodLevel)
-                            .tag(0)
-                        
-                        // Step 2
-                        EnergyInputView(driveLevel: $moodEntryVM.energyLevel)
-                            .tag(1)
-                        
-                        // Step 3
-                        Text("Step 3 Content: Focus")
-                            .tag(2)
-                        
-                        // Step 4
-                        Text("Step 4 Content: Anxiety")
-                            .tag(3)
-                        
-                        // Step 5
-                        Text("Step 5 Content: Tags")
-                            .tag(4)
-                    }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .animation(.easeInOut, value: moodEntryVM.currentStep)
-//                    .disabled(true) // Disable swiping - Undecided
+                    // Content steps
+                    MoodEntrySteps(viewModel: moodEntryVM)
                     
-                    navigationButtons
+                    // Navigation
+                    MoodEntryNavigation(viewModel: moodEntryVM)
                     
-                    StepProgressIndicator(currentStep: moodEntryVM.currentStep, totalSteps: moodEntryVM.totalSteps)
+                    // Progress indicator
+                    StepProgressIndicator(currentStep: moodEntryVM.currentStep,
+                                         totalSteps: moodEntryVM.totalSteps)
                         .padding()
                 }
-                .padding(.horizontal, 32)
+                .padding(.horizontal, 24)
                 .withAppBackground()
                 .customNavigationBar(navigationPath: $navigationPath)
                 .onAppear {
-                    moodEntryVM.userId = user.id
-                    
-                    moodEntryVM.onEntrySaved = { (entry: MoodEntry) in
-                        print("Entry saved: \(entry.id)")
-                    }
+                    setupViewModel(userId: user.id)
                 }
-                
                 .navigationDestination(for: String.self) { route in
-                    switch route {
-                    case "settings":
-                        SettingsView(navigationPath: $navigationPath)
-                            .environmentObject(authViewModel)
-                    default:
-                        Text("Unknown route")
-                    }
+                    handleNavigation(route)
                 }
             }
             .tint(.primary)
         }
     }
     
-    private var navigationButtons: some View {
-        HStack(spacing: 16) {
-            if moodEntryVM.canMoveToPreviousStep {
-                Button(action: { moodEntryVM.goToPreviousStep() }) {
-                    Image(systemName: "chevron.left")
-                        .fontWeight(.semibold)
-                        .font(.title2)
-                        .padding()
-                        .foregroundColor(.primary)
-                        .cornerRadius(12)
-                }.overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(style: StrokeStyle(lineWidth: 2))
-                        .foregroundColor(.primary)
-                }
-            }
-            
-            Button(action: {
-                if moodEntryVM.isLastStep {
-                    moodEntryVM.submitEntryData()
-                } else {
-                    moodEntryVM.goToNextStep()
-                }
-            }) {
-                Text(moodEntryVM.isLastStep ? "Submit" : "Next")
-                    .fontWeight(.semibold)
-                    .font(.title2)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.primaryButton)
-                    .foregroundColor(Color.primaryButtonText)
-                    .cornerRadius(12)
-            }
+    // Helper methods
+    private func setupViewModel(userId: String) {
+        moodEntryVM.userId = userId
+        moodEntryVM.onEntrySaved = { entry in
+            print("Entry saved: \(entry)")
+            // To be implemented
         }
-        .padding(.vertical)
+    }
+    
+    private func handleNavigation(_ route: String) -> some View {
+        switch route {
+        case "settings":
+            return AnyView(SettingsView(navigationPath: $navigationPath)
+                .environmentObject(authViewModel))
+        default:
+            return AnyView(Text("Unknown route"))
+        }
     }
 }
+
 #Preview {
     let mockViewModel = AuthViewModel()
     mockViewModel.currentUser = User(

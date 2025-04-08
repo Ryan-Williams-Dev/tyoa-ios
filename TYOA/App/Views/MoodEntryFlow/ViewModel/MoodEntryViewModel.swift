@@ -9,7 +9,16 @@ import Foundation
 import SwiftUI
 
 class MoodEntryViewModel: ObservableObject {
-    @Published var currentStep = 0
+    private var previousStepValue = 0
+    
+    @Published var currentStep = 0 {
+        didSet {
+            isMovingForward = currentStep > previousStepValue
+            previousStepValue = currentStep
+        }
+    }
+    
+    @Published private(set) var isMovingForward = true
     let totalSteps = 5
     
     @Published var moodLevel: Double = 0.5
@@ -18,7 +27,6 @@ class MoodEntryViewModel: ObservableObject {
     @Published var anxietyLevel: Double = 0.5
     @Published var selectedTags: [String] = []
     @Published var text: String = ""
-    
     @Published var userId: String = ""
     @Published var recentEntries: [MoodEntry] = []
     
@@ -35,6 +43,8 @@ class MoodEntryViewModel: ObservableObject {
     func goToNextStep() {
         if currentStep < totalSteps - 1 {
             currentStep += 1
+        } else if isLastStep {
+            submitEntryData()
         }
     }
     
@@ -43,7 +53,7 @@ class MoodEntryViewModel: ObservableObject {
             currentStep -= 1
         }
     }
-    
+        
     func submitEntryData() {
         let newEntry = MoodEntry(
             moodLevel: moodLevel,
@@ -66,6 +76,7 @@ class MoodEntryViewModel: ObservableObject {
     }
     
     func resetFlow() {
+        previousStepValue = 0
         currentStep = 0
         moodLevel = 0.5
         energyLevel = 0.5

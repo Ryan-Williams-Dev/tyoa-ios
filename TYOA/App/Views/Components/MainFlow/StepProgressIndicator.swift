@@ -15,7 +15,7 @@ struct StepProgressIndicator: View {
         HStack(spacing: 8) {
             ForEach(0..<totalSteps, id: \.self) { index in
                 Capsule()
-                    .fill(currentStep == index ? Color.primary : Color.secondary.opacity(0.3))
+                    .fill(index <= currentStep ? Color.primary : Color.secondary.opacity(0.3))
                     .frame(width: currentStep == index ? 20 : 8, height: 8)
                     .animation(.spring(), value: currentStep)
             }

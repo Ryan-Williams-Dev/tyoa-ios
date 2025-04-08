@@ -11,16 +11,21 @@ struct EnergyInputView: View {
     @Binding var driveLevel: Double
     
     var body: some View {
-        VStack {
-            Text("How driven are you today?")
-                .font(.headline)
-                .foregroundStyle(.secondaryText)
+        VStack(spacing: 24) {
+            Text("How's your energy level?")
+                .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
+                .padding(.top)
             
+            CustomSlider(
+                value: $driveLevel,
+                minLabel: "Low",
+                maxLabel: "High",
+                minIcon: "battery.0",
+                maxIcon: "battery.100"
+            )
             
-            Slider(value: $driveLevel)
-            
-
+            Spacer()
         }
     }
 }
