@@ -21,14 +21,15 @@ struct HomeView: View {
                     
                     // Content steps
                     MoodEntrySteps(viewModel: moodEntryVM)
-                                        
-                    // Navigation
-                    MoodEntryNavigation(viewModel: moodEntryVM)
                     
                     // Progress indicator
                     StepProgressIndicator(currentStep: moodEntryVM.currentStep,
-                                         totalSteps: moodEntryVM.totalSteps)
-                        .padding()
+                                          totalSteps: moodEntryVM.totalSteps)
+                    
+                    // Navigation
+                    MoodEntryNavigation(viewModel: moodEntryVM)
+                    
+                    
                 }
                 .padding(.horizontal, 24)
                 .withAppBackground()
