@@ -8,111 +8,48 @@
 import SwiftUI
 
 struct TagSelectionView: View {
-    @Binding var selectedTags: [String]
-    
-    private let availableTags = [
-        "Exercise", "Work", "Family", "Friends", "Reading",
-        "Gaming", "Shopping", "Learning", "Cooking", "Outdoors",
-        "Social Media", "TV", "Movies", "Music", "Sleep"
-    ]
+    @Binding var selectedTags: [MoodTag]
     
     var body: some View {
-        VStack(spacing: 24) {
-            Text("What activities influenced your mood today?")
-                .font(.title2)
-                .fontWeight(.medium)
-                .multilineTextAlignment(.center)
-            
-            ScrollView {
-                FlowLayout(spacing: 8) {
-                    ForEach(availableTags, id: \.self) { tag in
-                        tagButton(for: tag)
-                    }
-                }
-                .padding(.vertical)
-            }
+        ScrollView {
+            moodcards
         }
-        .padding()
     }
     
-    private func tagButton(for tag: String) -> some View {
-        let isSelected = selectedTags.contains(tag)
+    let columns = [
+        GridItem(.adaptive(minimum: 100)),
         
-        return Button(action: {
-            if isSelected {
-                selectedTags.removeAll { $0 == tag }
-            } else {
-                selectedTags.append(tag)
+    ]
+    
+    var moodcards: some View {
+        LazyVGrid(columns: columns, spacing: 16) {
+            ForEach(DummyData.moodTags.indices, id: \.self) { index in
+                MoodCardView(moodTag: DummyData.moodTags[index])
+                    .aspectRatio(2/3, contentMode: .fit)
             }
-        }) {
-            Text(tag)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(isSelected ? Color.primaryButton : Color.gray.opacity(0.2))
-                .foregroundColor(isSelected ? Color.primaryButtonText : .primary)
-                .cornerRadius(16)
         }
     }
 }
 
-// A simple flow layout to wrap tags
-struct FlowLayout: Layout {
-    var spacing: CGFloat
+struct MoodCardView: View {
+    let moodTag: MoodTag
     
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let width = proposal.width ?? 0
-        
-        var height: CGFloat = 0
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        
-        for view in subviews {
-            let viewSize = view.sizeThatFits(.unspecified)
-            
-            if x + viewSize.width > width {
-                // Start new row
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            
-            rowHeight = max(rowHeight, viewSize.height)
-            x += viewSize.width + spacing
-            height = max(height, y + rowHeight)
+    var body: some View {
+        VStack {
+            Image(systemName: moodTag.iconName ?? "face.smile")
+                .foregroundColor(.primary)
+            Text(moodTag.name)
         }
+        .background(Color.cardBackground)
+        .padding()
         
-        return CGSize(width: width, height: height)
-    }
-    
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x: CGFloat = bounds.minX
-        var y: CGFloat = bounds.minY
-        var rowHeight: CGFloat = 0
-        
-        for view in subviews {
-            let viewSize = view.sizeThatFits(.unspecified)
-            
-            if x + viewSize.width > bounds.maxX {
-                // Start new row
-                x = bounds.minX
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            
-            view.place(
-                at: CGPoint(x: x, y: y),
-                proposal: ProposedViewSize(width: viewSize.width, height: viewSize.height)
-            )
-            
-            rowHeight = max(rowHeight, viewSize.height)
-            x += viewSize.width + spacing
-        }
     }
 }
+
+
 
 struct TagSelectionView_Previews: PreviewProvider {
-    @State static var selectedTags: [String] = ["Exercise", "Reading"]
+    @State static var selectedTags: [MoodTag] = DummyData.moodTags
     
     static var previews: some View {
         TagSelectionView(selectedTags: $selectedTags)

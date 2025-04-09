@@ -25,8 +25,8 @@ class MoodEntryViewModel: ObservableObject {
     @Published var energyLevel: Double = 0.5
     @Published var focusLevel: Double = 0.5
     @Published var anxietyLevel: Double = 0.5
-    @Published var selectedTags: [String] = []
-    @Published var text: String = ""
+    @Published var selectedTags: [MoodTag] = []
+    @Published var adviceText: String = ""
     @Published var userId: String = ""
     @Published var recentEntries: [MoodEntry] = []
     
@@ -61,7 +61,7 @@ class MoodEntryViewModel: ObservableObject {
             focusLevel: focusLevel,
             anxietyLevel: anxietyLevel,
             selectedTags: selectedTags,
-            text: text.isEmpty ? nil : text,
+            adviceText: adviceText.isEmpty ? nil : adviceText,
             userId: userId
         )
         
@@ -83,6 +83,6 @@ class MoodEntryViewModel: ObservableObject {
         focusLevel = 0.5
         anxietyLevel = 0.5
         selectedTags = []
-        text = ""
+        adviceText = ""
     }
 }

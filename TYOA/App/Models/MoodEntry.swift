@@ -17,8 +17,8 @@ struct MoodEntry: Identifiable, Codable {
     let anxietyLevel: Double  // How anxious/calm (0.0 to 1.0)
     
 
-    let selectedTags: [String]
-    let text: String?
+    let selectedTags: [MoodTag]
+    let adviceText: String?
     
     let userId: String
     
@@ -29,8 +29,8 @@ struct MoodEntry: Identifiable, Codable {
         energyLevel: Double,
         focusLevel: Double,
         anxietyLevel: Double,
-        selectedTags: [String],
-        text: String? = nil,
+        selectedTags: [MoodTag],
+        adviceText: String? = nil,
         userId: String
     ) {
         self.id = id
@@ -40,23 +40,12 @@ struct MoodEntry: Identifiable, Codable {
         self.focusLevel = focusLevel
         self.anxietyLevel = anxietyLevel
         self.selectedTags = selectedTags
-        self.text = text
+        self.adviceText = adviceText
         self.userId = userId
     }
 }
 
 extension MoodEntry {
-    var wellbeingScore: Double {
-        let scores = [
-            moodLevel,
-            energyLevel,
-            focusLevel,
-            (1.0 - anxietyLevel) // Invert anxiety so higher is better
-        ]
-        
-        return scores.reduce(0.0, +) / Double(scores.count)
-    }
-    
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
