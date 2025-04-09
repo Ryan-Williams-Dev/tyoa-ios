@@ -11,21 +11,19 @@ struct MoodInputView: View {
     @Binding var moodLevel: Double
     
     var body: some View {
-        VStack(spacing: 24) {
-            Text("How are you feeling?")
-                .font(.largeTitle.bold())
-                .multilineTextAlignment(.center)
-                .padding(.top)
-            
-            CustomSlider(
+        VStack() {
+            CustomSliderCard(
                 value: $moodLevel,
-                minLabel: "Low",
-                maxLabel: "High",
-                minIcon: "cloud.rain",
-                maxIcon: "sun.max"
+                prompt: "How is your mood today?",
+                sliderName: "MoodLevel",
+                imageName: "logo",
+                isSystemImage: false,
+                minLabel: "Awful",
+                maxLabel: "Great",
+                minIcon: "hand.thumbsdown",
+                maxIcon: "hand.thumbsup"
             )
             
-            Spacer()
         }
     }
 }

@@ -18,7 +18,6 @@ struct CustomSlider: View {
     @State private var leftIconEffect = false
     @State private var rightIconEffect = false
     
-    // Haptic feedback generator for end stops
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     
     var body: some View {
@@ -91,7 +90,6 @@ struct CustomSlider: View {
                 }
                 .frame(height: 44)
                 .onAppear {
-                    // Prepare haptic engine
                     feedbackGenerator.prepare()
                 }
                 
@@ -104,9 +102,6 @@ struct CustomSlider: View {
             }
             .padding(.vertical, 10)
         }
-        .padding()
-        .background(Color.cardBackground)
-        .cornerRadius(16)
     }
     
     private func checkForExtremeValues(oldValue: Double, newValue: Double) {
@@ -121,21 +116,21 @@ struct CustomSlider: View {
         }
     }
     
+    @State private var canTriggerEffect = true
     private func triggerIconEffect(isLeft: Bool) {
         if isLeft {
             leftIconEffect = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 leftIconEffect = false
             }
         } else {
             rightIconEffect = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 rightIconEffect = false
             }
         }
     }
     
-    // Trigger haptic feedback
     private func triggerHaptic() {
         feedbackGenerator.impactOccurred(intensity: 0.8)
     }

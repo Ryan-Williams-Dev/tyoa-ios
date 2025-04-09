@@ -11,26 +11,20 @@ struct FocusInputView: View {
     @Binding var focusLevel: Double
     
     var body: some View {
-        VStack(spacing: 24) {
-            Text("How focused are you feeling?")
-                .font(.title2)
-                .fontWeight(.medium)
-                .multilineTextAlignment(.center)
-            
-            Spacer()
-            
-            SliderView(
-                value: $focusLevel,
-                minLabel: "Scattered",
-                maxLabel: "Focused",
-                minIcon: "brain.head.profile",
-                maxIcon: "scope"
-            )
-            
-            Spacer()
-        }
+        CustomSliderCard(
+            value: $focusLevel,
+            prompt: "How focused do you feel today?",
+            sliderName: "Focus Level",
+            imageName: "figure.archery",
+            isSystemImage: true,
+            minLabel: "Scattered",
+            maxLabel: "Locked In",
+            minIcon: "brain.head.profile",
+            maxIcon: "scope"
+        )
     }
 }
+
 
 struct FocusInputView_Previews: PreviewProvider {
     @State static var focus: Double = 0.5

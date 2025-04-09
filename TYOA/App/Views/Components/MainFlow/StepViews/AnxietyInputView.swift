@@ -11,23 +11,19 @@ struct AnxietyInputView: View {
     @Binding var anxietyLevel: Double
     
     var body: some View {
-        VStack(spacing: 24) {
-            Text("How anxious are you feeling?")
-                .font(.title2)
-                .fontWeight(.medium)
-                .multilineTextAlignment(.center)
-            
-            Spacer()
-            
-            SliderView(
+        VStack() {
+            CustomSliderCard(
                 value: $anxietyLevel,
+                prompt: "How anxious are you feeling today?",
+                sliderName: "Anxiety Level",
+                imageName: "figure.mind.and.body",
+                isSystemImage: true,
                 minLabel: "Anxious",
-                maxLabel: "Calm",
+                maxLabel: "Cool as a cucumber",
                 minIcon: "waveform.path.ecg.rectangle",
                 maxIcon: "heart.circle"
             )
-            
-            Spacer()
+        
         }
     }
 }

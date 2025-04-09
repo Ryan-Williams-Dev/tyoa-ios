@@ -21,7 +21,7 @@ struct HomeView: View {
                     
                     // Content steps
                     MoodEntrySteps(viewModel: moodEntryVM)
-                    
+                                        
                     // Navigation
                     MoodEntryNavigation(viewModel: moodEntryVM)
                     

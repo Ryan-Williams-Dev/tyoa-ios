@@ -13,7 +13,7 @@ struct UserGreeting: View {
     var body: some View {
         Text("""
              Hello, \(firstName).
-             How are you feeling today?
+             Welcome back to Echo.
              """)
         .font(.title)
         .padding(.top)
