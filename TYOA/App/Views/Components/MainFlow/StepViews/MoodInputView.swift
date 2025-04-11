@@ -28,6 +28,7 @@ struct MoodInputView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.primary.opacity(0.1), lineWidth: 1)
         )
+        .padding(.horizontal, 24)
     }
 }
 //

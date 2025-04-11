@@ -11,13 +11,7 @@ import SwiftUI
 class MoodEntryViewModel: ObservableObject {
     private var previousStepValue = 0
     
-    @Published var currentStep = 0 {
-        didSet {
-            isMovingForward = currentStep > previousStepValue
-            previousStepValue = currentStep
-        }
-    }
-    
+    @Published var currentStep = 0
     @Published private(set) var isMovingForward = true
     let totalSteps = 5
     

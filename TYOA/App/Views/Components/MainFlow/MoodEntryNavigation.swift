@@ -21,6 +21,7 @@ struct MoodEntryNavigation: View {
             nextButton
         }
         .padding(.vertical)
+        .padding(.horizontal, 24)
     }
     
     private var backButton: some View {
@@ -31,11 +32,10 @@ struct MoodEntryNavigation: View {
                 .padding()
                 .foregroundColor(.primary)
                 .cornerRadius(12)
-        }.overlay {
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(style: StrokeStyle(lineWidth: 2))
-                .foregroundColor(.primary)
-        }
+        }.overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.primary.opacity(0.1), lineWidth: 2)
+        )
     }
     
     private var nextButton: some View {

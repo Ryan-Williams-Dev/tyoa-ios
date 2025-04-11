@@ -27,6 +27,7 @@ struct TagSelectionView: View {
                     .aspectRatio(5/6, contentMode: .fit)
             }
         }
+        .padding(.horizontal)
     }
 }
 
@@ -37,6 +38,8 @@ struct MoodCardView: View {
     private var isSelected: Bool {
         selectedTags.contains(moodTag.slug)
     }
+    
+    let generator = UIImpactFeedbackGenerator(style: .medium)
     
     var body: some View {
         VStack(spacing: 16) {
@@ -80,7 +83,7 @@ struct MoodCardView: View {
             withAnimation(.spring(response: 0.3)) {
                 toggleSelection()
             }
-            let generator = UIImpactFeedbackGenerator(style: .medium)
+            
             generator.impactOccurred()
         }
         .scaleEffect(isSelected ? 1.03 : 1.0)
@@ -99,8 +102,8 @@ struct TagSelectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         TagSelectionView(selectedTags: $selectedTags)
-            .padding()
-//            .withAppBackground()
+//            .padding()
+            .withAppBackground()
     }
 }
 

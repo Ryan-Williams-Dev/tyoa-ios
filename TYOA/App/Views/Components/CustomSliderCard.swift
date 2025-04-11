@@ -30,7 +30,7 @@ struct CustomSliderCard: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .font(.system(size: 100))
-                        .fontWeight(.thin)
+                        .fontWeight(.ultraLight)
                         .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(.primary)
                 } else {

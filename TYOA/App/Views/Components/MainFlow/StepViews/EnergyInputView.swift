@@ -11,7 +11,7 @@ struct EnergyInputView: View {
     @Binding var driveLevel: Double
     
     var body: some View {
-        VStack() {            
+        VStack() {
             CustomSliderCard(
                 value: $driveLevel,
                 prompt: "How much energy do you have today?",
@@ -22,7 +22,13 @@ struct EnergyInputView: View {
                 maxLabel: "Full of beans",
                 minIcon: "tortoise",
                 maxIcon: "hare"
-            )}
+            )
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+        )
+        .padding(.horizontal, 24)
     }
 }
 

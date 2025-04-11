@@ -31,7 +31,6 @@ struct HomeView: View {
                     
                     
                 }
-                .padding(.horizontal, 24)
                 .withAppBackground()
                 .customNavigationBar(navigationPath: $navigationPath)
                 .onAppear {
@@ -45,7 +44,6 @@ struct HomeView: View {
         }
     }
     
-    // Helper methods
     private func setupViewModel(userId: String) {
         moodEntryVM.userId = userId
         moodEntryVM.onEntrySaved = { entry in

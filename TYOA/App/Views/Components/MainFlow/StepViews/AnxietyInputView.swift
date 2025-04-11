@@ -25,6 +25,11 @@ struct AnxietyInputView: View {
             )
         
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+        )
+        .padding(.horizontal, 24)
     }
 }
 
@@ -33,7 +38,6 @@ struct AnxietyInputView_Previews: PreviewProvider {
     
     static var previews: some View {
         AnxietyInputView(anxietyLevel: $anxiety)
-            .padding()
             .withAppBackground()
     }
 }

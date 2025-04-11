@@ -17,6 +17,7 @@ struct UserGreeting: View {
              """)
         .font(.title)
         .padding(.top)
+        .padding(.horizontal, 24)
         .multilineTextAlignment(.center)
     }
 }
