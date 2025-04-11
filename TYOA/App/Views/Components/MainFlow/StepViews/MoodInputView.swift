@@ -23,8 +23,11 @@ struct MoodInputView: View {
                 minIcon: "hand.thumbsdown",
                 maxIcon: "hand.thumbsup"
             )
-            
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+        )
     }
 }
 //

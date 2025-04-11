@@ -17,7 +17,7 @@ struct MoodEntry: Identifiable, Codable {
     let anxietyLevel: Double  // How anxious/calm (0.0 to 1.0)
     
 
-    let selectedTags: [MoodTag]
+    let selectedTags: Set<String>
     let adviceText: String?
     
     let userId: String
@@ -29,7 +29,7 @@ struct MoodEntry: Identifiable, Codable {
         energyLevel: Double,
         focusLevel: Double,
         anxietyLevel: Double,
-        selectedTags: [MoodTag],
+        selectedTags: Set<String>,
         adviceText: String? = nil,
         userId: String
     ) {

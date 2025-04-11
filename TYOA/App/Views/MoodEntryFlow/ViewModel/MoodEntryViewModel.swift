@@ -25,7 +25,7 @@ class MoodEntryViewModel: ObservableObject {
     @Published var energyLevel: Double = 0.5
     @Published var focusLevel: Double = 0.5
     @Published var anxietyLevel: Double = 0.5
-    @Published var selectedTags: [MoodTag] = []
+    @Published var selectedTags: Set<String> = []
     @Published var adviceText: String = ""
     @Published var userId: String = ""
     @Published var recentEntries: [MoodEntry] = []

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TagSelectionView: View {
-    @Binding var selectedTags: [MoodTag]
+    @Binding var selectedTags: Set<String>
     
     var body: some View {
         ScrollView {
@@ -23,8 +23,8 @@ struct TagSelectionView: View {
     var moodcards: some View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(DummyData.moodTags.indices, id: \.self) { index in
-                MoodCardView(moodTag: DummyData.moodTags[index])
-                    .aspectRatio(3/4, contentMode: .fit)
+                MoodCardView(moodTag: DummyData.moodTags[index], selectedTags: $selectedTags)
+                    .aspectRatio(5/6, contentMode: .fit)
             }
         }
     }
@@ -32,50 +32,75 @@ struct TagSelectionView: View {
 
 struct MoodCardView: View {
     let moodTag: MoodTag
+    @Binding var selectedTags: Set<String>
+    
+    private var isSelected: Bool {
+        selectedTags.contains(moodTag.slug)
+    }
     
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: moodTag.iconName ?? "face.smile")
                 .font(.system(size: 32))
-                .foregroundColor(.primary)
+                .foregroundColor(isSelected ? .cardBackground : .primary)
                 .frame(height: 50)
                 .padding(.top, 8)
             
             Text(moodTag.name)
                 .font(.headline)
+                .foregroundColor(isSelected ? .cardBackground : .primary)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 12)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.cardBackground, Color.cardBackground.opacity(0.85)]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(
+                            isSelected ?
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.primary, Color.primary.opacity(0.8)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ) :
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.cardBackground, Color.cardBackground.opacity(0.85)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
                 )
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.primary.opacity(0.1), lineWidth: 1)
-        )
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(isSelected ? Color.primary : Color.primary.opacity(0.1), lineWidth: isSelected ? 2 : 1)
+                )
+                .shadow(color: isSelected ? Color.primary.opacity(0.3) : Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
         .padding(4)
         .contentShape(RoundedRectangle(cornerRadius: 16))
-        .buttonStyle(PlainButtonStyle())
-        .hoverEffect(.lift)
+        .onTapGesture {
+            withAnimation(.spring(response: 0.3)) {
+                toggleSelection()
+            }
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }
+        .scaleEffect(isSelected ? 1.03 : 1.0)
+    }
+    
+    private func toggleSelection() {
+        if isSelected {
+            selectedTags.remove(moodTag.slug)
+        } else {
+            selectedTags.insert(moodTag.slug)
+        }
     }
 }
-
 struct TagSelectionView_Previews: PreviewProvider {
-    @State static var selectedTags: [MoodTag] = DummyData.moodTags
+    @State static var selectedTags: Set<String> = ["confident"]
     
     static var previews: some View {
         TagSelectionView(selectedTags: $selectedTags)
             .padding()
-            .withAppBackground()
+//            .withAppBackground()
     }
 }
 

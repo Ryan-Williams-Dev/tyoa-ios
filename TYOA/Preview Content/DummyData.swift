@@ -10,11 +10,17 @@ import Foundation
 
 struct DummyData {
     static let moodTags: [MoodTag] = [
-        MoodTag(name: "Confident", iconName: "hand.thumbsup.fill", slug: "confident", oppositeSlug: "insecure"),
-        MoodTag(name: "Insecure", iconName: "hand.thumbsdown.fill", slug: "insecure", oppositeSlug: "confident"),
-        MoodTag(name: "Happy", iconName: "smiley.fill", slug: "happy", oppositeSlug: "sad"),
-        MoodTag(name: "Sad", iconName: "frown.fill", slug: "sad", oppositeSlug: "happy"),
-        MoodTag(name: "Focused", iconName: "eye.fill", slug: "focused", oppositeSlug: "distracted"),
-        MoodTag(name: "Distracted", iconName: "wand.and.stars", slug: "distracted", oppositeSlug: "focused")
+        MoodTag(name: "Confident", iconName: "hand.thumbsup", slug: "confident", oppositeSlug: "insecure"),
+        MoodTag(name: "Insecure", iconName: "hand.thumbsdown", slug: "insecure", oppositeSlug: "confident"),
+        MoodTag(name: "Happy", iconName: "smiley", slug: "happy", oppositeSlug: "sad"),
+        MoodTag(name: "Sad", iconName: "cloud.rain", slug: "sad", oppositeSlug: "happy"),
+        MoodTag(name: "Focused", iconName: "eye", slug: "focused", oppositeSlug: "distracted"),
+        MoodTag(name: "Distracted", iconName: "wand.and.stars", slug: "distracted", oppositeSlug: "focused"),
+        MoodTag(name: "Excited", iconName: "star.fill", slug: "excited", oppositeSlug: "bored"),
+        MoodTag(name: "Bored", iconName: "hourglass", slug: "bored", oppositeSlug: "excited"),
+        MoodTag(name: "Relaxed", iconName: "leaf.fill", slug: "relaxed", oppositeSlug: "stressed"),
+        MoodTag(name: "Stressed", iconName: "bolt.fill", slug: "stressed", oppositeSlug: "relaxed"),
+        MoodTag(name: "Motivated", iconName: "flame.fill", slug: "motivated", oppositeSlug: "tired"),
+        MoodTag(name: "Tired", iconName: "zzz", slug: "tired", oppositeSlug: "motivated")
     ]
 }

@@ -38,6 +38,6 @@ struct MoodEntrySteps: View {
         .gesture(DragGesture()
             .onChanged { _ in }
             .onEnded { _ in }
-        , including: isDraggingSlider ? .subviews : .none)  // Only capture gestures when a slider is being dragged
+        , including: isDraggingSlider ? .subviews : .none)
     }
 }
