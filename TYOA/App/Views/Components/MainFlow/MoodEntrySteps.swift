@@ -8,33 +8,33 @@
 import SwiftUI
 
 struct MoodEntrySteps: View {
-    @ObservedObject var viewModel: MoodEntryViewModel
+    @EnvironmentObject var moodEntryVM: MoodEntryViewModel
     @State private var isDraggingSlider = false
     
     var body: some View {
-        TabView(selection: $viewModel.currentStep) {
+        TabView(selection: $moodEntryVM.currentStep) {
             // Step 1: Mood
-            MoodInputView(moodLevel: $viewModel.moodLevel)
-                .tag(0)
+            EmotionInputView(levelType: .mood)
+                .tag(MoodEntryViewModel.EntryStep.mood.rawValue)
             
             // Step 2: Energy
-            EnergyInputView(driveLevel: $viewModel.energyLevel)
-                .tag(1)
+            EmotionInputView(levelType: .energy)
+                .tag(MoodEntryViewModel.EntryStep.energy.rawValue)
             
             // Step 3: Focus
-            FocusInputView(focusLevel: $viewModel.focusLevel)
-                .tag(2)
+            EmotionInputView(levelType: .focus)
+                .tag(MoodEntryViewModel.EntryStep.focus.rawValue)
             
             // Step 4: Anxiety
-            AnxietyInputView(anxietyLevel: $viewModel.anxietyLevel)
-                .tag(3)
+            EmotionInputView(levelType: .anxiety)
+                .tag(MoodEntryViewModel.EntryStep.anxiety.rawValue)
             
             // Step 5: Tags
-            TagSelectionView(selectedTags: $viewModel.selectedTags)
-                .tag(4)
+            TagSelectionView()
+                .tag(MoodEntryViewModel.EntryStep.tags.rawValue)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .animation(.easeInOut, value: viewModel.currentStep)
+        .animation(.easeInOut, value: moodEntryVM.currentStep)
         .gesture(DragGesture()
             .onChanged { _ in }
             .onEnded { _ in }

@@ -9,7 +9,10 @@ import SwiftUI
 import UIKit
 
 struct CustomSlider: View {
-    @Binding var value: Double
+    @State private var internalValue: Double
+    
+    private let onValueChanged: (Double) -> Void
+    
     let minLabel: String
     let maxLabel: String
     let minIcon: String
@@ -20,6 +23,23 @@ struct CustomSlider: View {
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     
+    init(
+        value: Double,
+        onValueChanged: @escaping (Double) -> Void,
+        minLabel: String,
+        maxLabel: String,
+        minIcon: String,
+        maxIcon: String
+    ) {
+        self.onValueChanged = onValueChanged
+        self.minLabel = minLabel
+        self.maxLabel = maxLabel
+        self.minIcon = minIcon
+        self.maxIcon = maxIcon
+        self._internalValue = State(initialValue: value)
+    }
+    
+
     var body: some View {
         VStack {
             HStack {
@@ -39,7 +59,7 @@ struct CustomSlider: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 32, height: 32)
-                    .foregroundColor(.primary.opacity(1 - value))
+                    .foregroundColor(.primary.opacity(1 - internalValue))
                     .symbolEffect(.wiggle, options: .repeat(1), isActive: leftIconEffect)
                 
                 GeometryReader { geometry in
@@ -54,7 +74,7 @@ struct CustomSlider: View {
                         // Active track
                         Rectangle()
                             .fill(Color.primary)
-                            .frame(width: max(0, min(geometry.size.width, geometry.size.width * CGFloat(value))), height: 8)
+                            .frame(width: max(0, min(geometry.size.width, geometry.size.width * CGFloat(internalValue))), height: 8)
                             .cornerRadius(4)
                             .frame(maxHeight: .infinity)
                         
@@ -64,7 +84,7 @@ struct CustomSlider: View {
                             .frame(width: 24, height: 24)
                             .shadow(radius: isDragging ? 3 : 1)
                             .position(
-                                x: max(12, min(geometry.size.width - 12, geometry.size.width * CGFloat(value))),
+                                x: max(12, min(geometry.size.width - 12, geometry.size.width * CGFloat(internalValue))),
                                 y: geometry.size.height / 2
                             )
                     }
@@ -77,9 +97,10 @@ struct CustomSlider: View {
                                 let clampedX = min(max(0, drag.location.x), width)
                                 let newValue = Double(clampedX / width)
                                 
-                                checkForExtremeValues(oldValue: self.value, newValue: newValue)
+                                checkForExtremeValues(oldValue: self.internalValue, newValue: newValue)
                                 
-                                self.value = newValue
+                                self.internalValue = newValue
+                                self.onValueChanged(newValue)
                             }
                             .onEnded { _ in
                                 withAnimation(.easeOut(duration: 0.1)) {
@@ -97,7 +118,7 @@ struct CustomSlider: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 32, height: 32)
-                    .foregroundColor(.primary.opacity(value))
+                    .foregroundColor(.primary.opacity(internalValue))
                     .symbolEffect(.wiggle, options: .repeat(1), isActive: rightIconEffect)
             }
             .padding(.vertical, 10)
@@ -105,6 +126,7 @@ struct CustomSlider: View {
     }
     
     private func checkForExtremeValues(oldValue: Double, newValue: Double) {
+        // Your existing code
         if newValue <= 0.01 && oldValue > 0.01 {
             triggerIconEffect(isLeft: true)
             triggerHaptic()
@@ -116,7 +138,6 @@ struct CustomSlider: View {
         }
     }
     
-    @State private var canTriggerEffect = true
     private func triggerIconEffect(isLeft: Bool) {
         if isLeft {
             leftIconEffect = true

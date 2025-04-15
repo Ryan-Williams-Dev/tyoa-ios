@@ -16,7 +16,7 @@ struct DummyData {
         MoodTag(name: "Sad", iconName: "cloud.rain", slug: "sad", oppositeSlug: "happy"),
         MoodTag(name: "Focused", iconName: "eye", slug: "focused", oppositeSlug: "distracted"),
         MoodTag(name: "Distracted", iconName: "wand.and.stars", slug: "distracted", oppositeSlug: "focused"),
-        MoodTag(name: "Excited", iconName: "star.", slug: "excited", oppositeSlug: "bored"),
+        MoodTag(name: "Excited", iconName: "star", slug: "excited", oppositeSlug: "bored"),
         MoodTag(name: "Bored", iconName: "hourglass", slug: "bored", oppositeSlug: "excited"),
         MoodTag(name: "Relaxed", iconName: "leaf", slug: "relaxed", oppositeSlug: "stressed"),
         MoodTag(name: "Stressed", iconName: "bolt", slug: "stressed", oppositeSlug: "relaxed"),

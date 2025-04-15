@@ -9,22 +9,47 @@ import Foundation
 import SwiftUI
 
 class MoodEntryViewModel: ObservableObject {
-    private var previousStepValue = 0
+    // MARK: - Step Management
+    
+    enum EntryStep: Int, CaseIterable {
+        case mood = 0
+        case energy
+        case focus
+        case anxiety
+        case tags
+        // additional steps here
+        
+        var title: String {
+            switch self {
+            case .mood: return "Mood"
+            case .energy: return "Energy"
+            case .focus: return "Focus"
+            case .anxiety: return "Anxiety"
+            case .tags: return "Tags"
+            }
+        }
+    }
     
     @Published var currentStep = 0
-    @Published private(set) var isMovingForward = true
-    let totalSteps = 5
     
-    @Published var moodLevel: Double = 0.5
-    @Published var energyLevel: Double = 0.5
-    @Published var focusLevel: Double = 0.5
-    @Published var anxietyLevel: Double = 0.5
-    @Published var selectedTags: Set<String> = []
+    var totalSteps: Int {
+        return EntryStep.allCases.count
+    }
+    
+    // MARK: - Entry Data
+    
+    @Published private(set) var moodLevel: Double = 0.5
+    @Published private(set) var energyLevel: Double = 0.5
+    @Published private(set) var focusLevel: Double = 0.5
+    @Published private(set) var anxietyLevel: Double = 0.5
+    @Published private var selectedTags: Set<String> = []
     @Published var adviceText: String = ""
     @Published var userId: String = ""
     @Published var recentEntries: [MoodEntry] = []
     
     var onEntrySaved: ((MoodEntry) -> Void)?
+    
+    // MARK: - Computed Properties
     
     var canMoveToPreviousStep: Bool {
         return currentStep > 0
@@ -33,6 +58,12 @@ class MoodEntryViewModel: ObservableObject {
     var isLastStep: Bool {
         return currentStep == totalSteps - 1
     }
+    
+    var currentStepType: EntryStep? {
+        return EntryStep(rawValue: currentStep)
+    }
+    
+    // MARK: - Navigation Methods
     
     func goToNextStep() {
         if currentStep < totalSteps - 1 {
@@ -47,7 +78,55 @@ class MoodEntryViewModel: ObservableObject {
             currentStep -= 1
         }
     }
-        
+    
+    func goToStep(_ step: EntryStep) {
+        currentStep = step.rawValue
+    }
+    
+    // MARK: - Slider Methods
+    enum LevelType {
+        case mood, energy, focus, anxiety
+    }
+    
+    func updateValue(of levelType: LevelType, to value: Double) {
+        switch levelType {
+        case .mood:
+            moodLevel = value
+        case .energy:
+            energyLevel = value
+        case .focus:
+            focusLevel = value
+        case .anxiety:
+            anxietyLevel = value
+        }
+    }
+    
+    // MARK: - Tag Methods
+    
+    func getTags() -> [MoodTag] {
+        return TagsRepository.shared.availableTags
+    }
+    
+    func tagIsSelected(_ tag: MoodTag) -> Bool {
+        return selectedTags.contains(tag.slug)
+    }
+    
+    func toggleTag(_ tag: MoodTag) {
+        if selectedTags.contains(tag.slug) {
+            selectedTags.remove(tag.slug)
+        } else {
+            selectedTags.insert(tag.slug)
+        }
+    }
+    
+    var selectedMoodTags: [MoodTag] {
+        return selectedTags.compactMap { slug in
+            TagsRepository.shared.findTag(bySlug: slug)
+        }
+    }
+    
+    // MARK: - Data Submission
+    
     func submitEntryData() {
         let newEntry = MoodEntry(
             moodLevel: moodLevel,
@@ -67,10 +146,10 @@ class MoodEntryViewModel: ObservableObject {
     
     private func saveEntryToDatabase(_ entry: MoodEntry) {
         print("Saving mood entry to database: \(entry.id)")
+        // Implement database saving logic here
     }
     
     func resetFlow() {
-        previousStepValue = 0
         currentStep = 0
         moodLevel = 0.5
         energyLevel = 0.5

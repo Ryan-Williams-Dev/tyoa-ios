@@ -8,47 +8,46 @@
 import SwiftUI
 
 struct TagSelectionView: View {
-    @Binding var selectedTags: Set<String>
+    @EnvironmentObject var viewModel: MoodEntryViewModel
     
     var body: some View {
-        ScrollView {
-            moodcards
-        }
-    }
-    
-    let columns = [
-        GridItem(.adaptive(minimum: 100)),
-    ]
-    
-    var moodcards: some View {
-        LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(DummyData.moodTags.indices, id: \.self) { index in
-                MoodCardView(moodTag: DummyData.moodTags[index], selectedTags: $selectedTags)
-                    .aspectRatio(5/6, contentMode: .fit)
+        VStack(spacing: 16) {
+            Text("Select all emotions that apply to you today")
+                .font(.headline)
+                .foregroundStyle(.secondaryText)
+            
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                    ForEach(viewModel.getTags()) { moodtag in
+                        MoodCardView(
+                            moodTag: moodtag,
+                            isSelected: viewModel.tagIsSelected(moodtag),
+                            action: { viewModel.toggleTag(moodtag) }
+                        )
+                    }.aspectRatio(1, contentMode: .fit)
+                }
             }
+            .padding(.horizontal, 24)
         }
-        .padding(.horizontal)
+       
     }
 }
 
 struct MoodCardView: View {
     let moodTag: MoodTag
-    @Binding var selectedTags: Set<String>
-    
-    private var isSelected: Bool {
-        selectedTags.contains(moodTag.slug)
-    }
+    let isSelected: Bool
+    let action: () -> Void
     
     let generator = UIImpactFeedbackGenerator(style: .medium)
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             Image(systemName: moodTag.iconName ?? "face.smile")
                 .font(.system(size: 32))
-                .foregroundColor(isSelected ? .cardBackground : .primary)
-                .frame(height: 50)
-                .padding(.top, 8)
-            
+                               .foregroundColor(isSelected ? .cardBackground : .primary)
+                               .frame(height: 50)
+                               .padding(.top, 8)
+                               .accessibility(hidden: false)
             Text(moodTag.name)
                 .font(.headline)
                 .foregroundColor(isSelected ? .cardBackground : .primary)
@@ -57,53 +56,47 @@ struct MoodCardView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            isSelected ?
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.primary, Color.primary.opacity(0.8)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ) :
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.cardBackground, Color.cardBackground.opacity(0.85)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    isSelected ?
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.primary, Color.primary.opacity(0.8)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ) :
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.cardBackground, Color.cardBackground.opacity(0.85)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(isSelected ? Color.primary : Color.primary.opacity(0.1), lineWidth: isSelected ? 2 : 1)
-                )
-                .shadow(color: isSelected ? Color.primary.opacity(0.3) : Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(isSelected ? Color.primary : Color.primary.opacity(0.1), lineWidth: isSelected ? 2 : 1)
+        )
+        .shadow(color: isSelected ? Color.primary.opacity(0.3) : Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
         .padding(4)
         .contentShape(RoundedRectangle(cornerRadius: 16))
         .onTapGesture {
             withAnimation(.spring(response: 0.3)) {
-                toggleSelection()
+                action()
             }
-            
             generator.impactOccurred()
         }
         .scaleEffect(isSelected ? 1.03 : 1.0)
     }
-    
-    private func toggleSelection() {
-        if isSelected {
-            selectedTags.remove(moodTag.slug)
-        } else {
-            selectedTags.insert(moodTag.slug)
-        }
-    }
 }
-struct TagSelectionView_Previews: PreviewProvider {
-    @State static var selectedTags: Set<String> = ["confident"]
+
+
+
+#Preview {
+    // Create a sample ViewModel for the preview
+    let viewModel = MoodEntryViewModel()
     
-    static var previews: some View {
-        TagSelectionView(selectedTags: $selectedTags)
-//            .padding()
-            .withAppBackground()
-    }
+    
+    return TagSelectionView()
+        .environmentObject(viewModel)
+        .preferredColorScheme(.light)
 }
 

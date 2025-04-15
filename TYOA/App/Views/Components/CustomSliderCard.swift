@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CustomSliderCard: View {
-    @Binding var value: Double
+    let value: Double
+    let onValueChanged: (Double) -> Void
+    
     let prompt: String
     let sliderName: String
     let imageName: String
@@ -47,7 +49,8 @@ struct CustomSliderCard: View {
                 .multilineTextAlignment(.center)
             
             CustomSlider(
-                value: $value,
+                value: value,
+                onValueChanged: onValueChanged,
                 minLabel: minLabel,
                 maxLabel: maxLabel,
                 minIcon: minIcon,

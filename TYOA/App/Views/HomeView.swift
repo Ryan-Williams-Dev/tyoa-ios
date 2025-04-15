@@ -20,7 +20,7 @@ struct HomeView: View {
                     UserGreeting(firstName: user.firstName)
                     
                     // Content steps
-                    MoodEntrySteps(viewModel: moodEntryVM)
+                    MoodEntrySteps()
                     
                     // Progress indicator
                     StepProgressIndicator(currentStep: moodEntryVM.currentStep,
@@ -41,6 +41,7 @@ struct HomeView: View {
                 }
             }
             .tint(.primary)
+            .environmentObject(moodEntryVM)
         }
     }
     
