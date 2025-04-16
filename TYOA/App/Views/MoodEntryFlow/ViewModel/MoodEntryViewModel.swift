@@ -17,7 +17,7 @@ class MoodEntryViewModel: ObservableObject {
         case focus
         case anxiety
         case tags
-        // additional steps here
+        case adviceText
         
         var title: String {
             switch self {
@@ -26,6 +26,7 @@ class MoodEntryViewModel: ObservableObject {
             case .focus: return "Focus"
             case .anxiety: return "Anxiety"
             case .tags: return "Tags"
+            case .adviceText: return "Advice"
             }
         }
     }
@@ -43,7 +44,7 @@ class MoodEntryViewModel: ObservableObject {
     @Published private(set) var focusLevel: Double = 0.5
     @Published private(set) var anxietyLevel: Double = 0.5
     @Published private var selectedTags: Set<String> = []
-    @Published var adviceText: String = ""
+    @Published private(set) var adviceText: String = ""
     @Published var userId: String = ""
     @Published var recentEntries: [MoodEntry] = []
     
@@ -91,13 +92,13 @@ class MoodEntryViewModel: ObservableObject {
     func updateValue(of levelType: LevelType, to value: Double) {
         switch levelType {
         case .mood:
-            moodLevel = value
+            self.moodLevel = value
         case .energy:
-            energyLevel = value
+            self.energyLevel = value
         case .focus:
-            focusLevel = value
+            self.focusLevel = value
         case .anxiety:
-            anxietyLevel = value
+            self.anxietyLevel = value
         }
     }
     
@@ -108,21 +109,26 @@ class MoodEntryViewModel: ObservableObject {
     }
     
     func tagIsSelected(_ tag: MoodTag) -> Bool {
-        return selectedTags.contains(tag.slug)
+        return self.selectedTags.contains(tag.slug)
     }
     
     func toggleTag(_ tag: MoodTag) {
-        if selectedTags.contains(tag.slug) {
-            selectedTags.remove(tag.slug)
+        if self.selectedTags.contains(tag.slug) {
+            self.selectedTags.remove(tag.slug)
         } else {
-            selectedTags.insert(tag.slug)
+            self.selectedTags.insert(tag.slug)
         }
     }
     
     var selectedMoodTags: [MoodTag] {
-        return selectedTags.compactMap { slug in
+        return self.selectedTags.compactMap { slug in
             TagsRepository.shared.findTag(bySlug: slug)
         }
+    }
+    
+    // MARK: - Advice Text Methods
+    func updateAdviceText(to inputText: String) {
+        self.adviceText = inputText
     }
     
     // MARK: - Data Submission

@@ -32,6 +32,9 @@ struct MoodEntrySteps: View {
             // Step 5: Tags
             TagSelectionView()
                 .tag(MoodEntryViewModel.EntryStep.tags.rawValue)
+            
+            TextEntryView()
+                .tag(MoodEntryViewModel.EntryStep.adviceText.rawValue)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .animation(.easeInOut, value: moodEntryVM.currentStep)

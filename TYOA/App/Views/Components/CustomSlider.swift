@@ -126,7 +126,6 @@ struct CustomSlider: View {
     }
     
     private func checkForExtremeValues(oldValue: Double, newValue: Double) {
-        // Your existing code
         if newValue <= 0.01 && oldValue > 0.01 {
             triggerIconEffect(isLeft: true)
             triggerHaptic()
