@@ -17,7 +17,8 @@ class MoodEntryViewModel: ObservableObject {
         case focus
         case anxiety
         case tags
-        case adviceText
+        case adviceText // Input for positive mood
+        case recieveAdvice // For negative mood
         
         var title: String {
             switch self {
@@ -27,6 +28,7 @@ class MoodEntryViewModel: ObservableObject {
             case .anxiety: return "Anxiety"
             case .tags: return "Tags"
             case .adviceText: return "Advice"
+            case .recieveAdvice: return "Recieve Advice"
             }
         }
     }
@@ -102,6 +104,28 @@ class MoodEntryViewModel: ObservableObject {
         }
     }
     
+    enum OverallMood: String {
+        case positive = "Positive"
+        case negative = "Negative"
+    }
+    
+    var overallMood: OverallMood {
+            // Weights
+            let moodWeight = 1.0
+            let energyWeight = 0.5
+            let focusWeight = 0.5
+            let anxietyWeight = 0.8
+
+            let score = (moodLevel * moodWeight) +
+                        (energyLevel * energyWeight) +
+                        (focusLevel * focusWeight) +
+                        (anxietyLevel * anxietyWeight)
+
+            let normalizedScore = score / (moodWeight + energyWeight + focusWeight + anxietyWeight)
+
+        return normalizedScore > 0.5 ? .positive : .negative
+        }
+    
     // MARK: - Tag Methods
     
     func getTags() -> [MoodTag] {
@@ -126,10 +150,48 @@ class MoodEntryViewModel: ObservableObject {
         }
     }
     
+    var oppositeMoodTags: [MoodTag] {
+           return self.selectedTags.compactMap { slug in
+               guard let tag = TagsRepository.shared.findTag(bySlug: slug),
+                     let oppositeTag = TagsRepository.shared.findTag(bySlug: tag.oppositeSlug) else {
+                   return nil
+               }
+               return oppositeTag
+           }
+       }
+    
     // MARK: - Advice Text Methods
     func updateAdviceText(to inputText: String) {
         self.adviceText = inputText
     }
+    
+    var adviceQuestion: String {
+            let opposites = selectedTags.compactMap { slug in
+                TagsRepository.shared.findTag(bySlug: slug)?.oppositeSlug
+            }
+
+            let oppositeNames = opposites.compactMap { TagsRepository.shared.findTag(bySlug: $0)?.slug }
+
+            guard !oppositeNames.isEmpty else {
+                return "What advice would you give to someone struggling with their mood today?"
+            }
+
+            let formattedList = formatList(oppositeNames)
+            return "What advice would you give to someone who is feeling \(formattedList) today?"
+        }
+    
+    private func formatList(_ items: [String]) -> String {
+            switch items.count {
+            case 1:
+                return items[0] // Single item
+            case 2:
+                return "\(items[0]) and \(items[1])" // Two items
+            default:
+                let allButLast = items.dropLast().joined(separator: ", ")
+                let last = items.last!
+                return "\(allButLast), and \(last)" // More than two items
+            }
+        }
     
     // MARK: - Data Submission
     

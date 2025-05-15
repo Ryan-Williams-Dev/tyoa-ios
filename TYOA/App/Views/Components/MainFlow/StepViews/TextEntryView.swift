@@ -12,21 +12,33 @@ struct TextEntryView: View {
     @State private var adviceText: String = ""
     @FocusState private var isTextFieldFocused: Bool
     
+    
     var body: some View {
         ScrollView {
-            Text("What advice would you give to someone struggling with their mood today?")
+            Text(moodEntryVM.adviceQuestion)
                 .font(.headline)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
             
-            TextEditor(text: $adviceText)
-                .focused($isTextFieldFocused)
-                .onChange(of: adviceText) { _, _ in
-                    moodEntryVM.updateAdviceText(to: adviceText)
-                }
-                .frame(minHeight: 150)
-                .padding(8)
-                .background(.cardBackground)
-                .cornerRadius(12)
+            ZStack {
+                TextEditor(text: $adviceText)
+                    .focused($isTextFieldFocused)
+                    .onChange(of: adviceText) { _, _ in
+                        moodEntryVM.updateAdviceText(to: adviceText)
+                    }
+                    .frame(minHeight: 150)
+                    .padding(.vertical, 2)
+                    .padding(.horizontal, 10)
+                    .scrollContentBackground(.hidden)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(Color.primary.opacity(0.2), lineWidth: 2)
+            )
+            .background(.cardBackground)
+            .cornerRadius(16)
+            
+           
         }
         .padding(.horizontal, 24)
         .onAppear {
@@ -50,8 +62,13 @@ struct TextEntryView: View {
             }
         }
     }
+    
 }
 
-//#Preview {
-//    TextEntryView()
-//}
+struct TextEntryView_Previews: PreviewProvider {
+    static var previews: some View {
+        TextEntryView()
+            .environmentObject(MoodEntryViewModel())
+            .withAppBackground()
+    }
+}

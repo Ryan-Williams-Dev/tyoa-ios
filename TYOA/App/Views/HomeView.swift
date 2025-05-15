@@ -29,27 +29,15 @@ struct HomeView: View {
                     // Navigation
                     MoodEntryNavigation(viewModel: moodEntryVM)
                     
-                    
                 }
                 .withAppBackground()
                 .customNavigationBar(navigationPath: $navigationPath)
-                .onAppear {
-                    setupViewModel(userId: user.id)
-                }
                 .navigationDestination(for: String.self) { route in
                     handleNavigation(route)
                 }
             }
             .tint(.primary)
             .environmentObject(moodEntryVM)
-        }
-    }
-    
-    private func setupViewModel(userId: String) {
-        moodEntryVM.userId = userId
-        moodEntryVM.onEntrySaved = { entry in
-            print("Entry saved: \(entry)")
-            // To be implemented
         }
     }
     
