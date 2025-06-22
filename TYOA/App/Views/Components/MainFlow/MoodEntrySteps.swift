@@ -33,8 +33,16 @@ struct MoodEntrySteps: View {
             TagSelectionView()
                 .tag(MoodEntryViewModel.EntryStep.tags.rawValue)
             
-            TextEntryView()
-                .tag(MoodEntryViewModel.EntryStep.adviceText.rawValue)
+            // Step6: Advice Entry or Delivered
+            Group {
+                if moodEntryVM.overallMood == .positive {
+                    TextEntryView()
+                        .tag(MoodEntryViewModel.EntryStep.adviceText.rawValue)
+                } else {
+                    ReceiveAdviceView()
+                        .tag(MoodEntryViewModel.EntryStep.recieveAdvice.rawValue)
+                }
+            }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .animation(.easeInOut, value: moodEntryVM.currentStep)

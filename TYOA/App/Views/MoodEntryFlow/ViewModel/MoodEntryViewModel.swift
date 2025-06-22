@@ -58,6 +58,10 @@ class MoodEntryViewModel: ObservableObject {
         return currentStep > 0
     }
     
+    var isPenultimateStep: Bool {
+        return currentStep == totalSteps - 2
+    }
+    
     var isLastStep: Bool {
         return currentStep == totalSteps - 1
     }
@@ -69,8 +73,12 @@ class MoodEntryViewModel: ObservableObject {
     // MARK: - Navigation Methods
     
     func goToNextStep() {
-        if currentStep < totalSteps - 1 {
+        if currentStep < totalSteps - 2 {
             currentStep += 1
+        } else if isPenultimateStep {
+            currentStep = overallMood == .positive ?
+                EntryStep.adviceText.rawValue :
+                EntryStep.recieveAdvice.rawValue
         } else if isLastStep {
             submitEntryData()
         }
@@ -192,6 +200,8 @@ class MoodEntryViewModel: ObservableObject {
                 return "\(allButLast), and \(last)" // More than two items
             }
         }
+    
+    
     
     // MARK: - Data Submission
     
